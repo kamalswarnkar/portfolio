@@ -9,7 +9,7 @@ export function SectionHeading({
 }: {
   eyebrow: string;
   title: string;
-  description: string;
+  description?: string;
 }) {
   return (
     <motion.div
@@ -23,7 +23,7 @@ export function SectionHeading({
       <h2 className="font-display text-4xl uppercase tracking-[0.18em] text-white md:text-5xl">
         {title}
       </h2>
-      <p className="mt-4 text-lg text-white/72">{description}</p>
+      {description ? <p className="mt-4 text-lg text-white/72">{description}</p> : null}
     </motion.div>
   );
 }

@@ -18,6 +18,16 @@ export const siteConfig = {
   },
 };
 
-export const sectionIds = ["hero", "about", "skills", "projects", "timeline", "contact"] as const;
+export const sectionIds = [
+  "hero",
+  "banner",
+  "about",
+  "training",
+  "education",
+  "skills",
+  "projects",
+  "certificates",
+  "contact",
+] as const;
 
 export type SectionId = (typeof sectionIds)[number];

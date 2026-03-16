@@ -1,56 +1,144 @@
 "use client";
 
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { SkillModal } from "@/components/ui/skill-modal";
-import { alienSkills } from "@/data/portfolio-data";
+import { skillWatches } from "@/data/portfolio-data";
 
 export const SkillsSection = forwardRef<HTMLElement, {}>(function SkillsSection(_props, ref) {
-  const [selectedSkill, setSelectedSkill] = useState<(typeof alienSkills)[number] | null>(null);
+  const primaryWatches = skillWatches.slice(0, 3);
+  const secondaryWatches = skillWatches.slice(3);
 
   return (
     <section id="skills" ref={ref} className="scroll-mt-24 pt-8">
-      <SectionHeading
-        eyebrow="Alien DNA Selection"
-        title="Ability Matrix"
-        description="Each core skill is treated like an Omnitrix transformation, with a different engineering advantage ready to deploy."
-      />
+      <SectionHeading eyebrow="Alien DNA Selection" title="Omnitrix Skill Vault" />
 
-      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {alienSkills.map((item, index) => (
-          <motion.button
-            key={item.alien}
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.5, delay: index * 0.08 }}
-            whileHover={{ y: -8, boxShadow: "0 0 30px rgba(57,255,20,0.25)" }}
-            onClick={() => setSelectedSkill(item)}
-            className="panel-frame clip-corners group relative flex aspect-square flex-col items-center justify-center rounded-[2rem] p-6 text-center"
-          >
-            <div className={`absolute inset-0 bg-gradient-to-br ${item.accent} opacity-70`} />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.1),transparent_30%)]" />
-            <div className="mb-5 flex h-28 w-28 items-center justify-center rounded-full border border-accent/35 bg-black/45 shadow-glow transition group-hover:scale-105">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/50 bg-accent/10">
-                <div className="h-8 w-8 rotate-45 border-x-4 border-y-4 border-accent shadow-glow" />
-              </div>
-            </div>
-            <p className="relative z-10 text-sm uppercase tracking-[0.45em] text-accent/72">
-              {item.alien}
-            </p>
-            <h3 className="relative z-10 mt-3 font-display text-2xl uppercase tracking-[0.12em] text-white">
-              {item.skill}
-            </h3>
-            <p className="relative z-10 mt-4 max-w-xs text-base text-white/70">{item.summary}</p>
-            <p className="relative z-10 mt-4 max-w-[14rem] text-xs uppercase tracking-[0.22em] text-white/50">
-              {item.signature}
-            </p>
-          </motion.button>
-        ))}
+      <div className="mt-10 space-y-6">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {primaryWatches.map((watch, index) => (
+            <SkillWatchCard
+              key={watch.category}
+              category={watch.category}
+              style={watch.style}
+              accent={watch.accent}
+              ringClass={watch.ringClass}
+              skills={watch.skills}
+              delay={index * 0.08}
+            />
+          ))}
+        </div>
+
+        <div className="mx-auto grid max-w-[58rem] gap-6 md:grid-cols-2 xl:max-w-[44rem]">
+          {secondaryWatches.map((watch, index) => (
+            <SkillWatchCard
+              key={watch.category}
+              category={watch.category}
+              style={watch.style}
+              accent={watch.accent}
+              ringClass={watch.ringClass}
+              skills={watch.skills}
+              delay={(primaryWatches.length + index) * 0.08}
+            />
+          ))}
+        </div>
       </div>
-
-      <SkillModal skill={selectedSkill} onClose={() => setSelectedSkill(null)} />
     </section>
   );
 });
+
+function SkillWatchCard({
+  category,
+  style,
+  accent,
+  ringClass,
+  skills,
+  delay,
+}: {
+  category: string;
+  style: string;
+  accent: string;
+  ringClass: string;
+  skills: string[];
+  delay: number;
+}) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % skills.length);
+    }, 2400);
+
+    return () => window.clearInterval(timer);
+  }, [skills.length]);
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.55, delay }}
+      className="panel-frame clip-corners relative overflow-hidden rounded-[2rem] p-6"
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${accent} opacity-70`} />
+      <div className="relative z-10">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.36em] text-accent/66">{style}</p>
+            <h3 className="mt-3 font-display text-2xl uppercase tracking-[0.12em] text-white">
+              {category}
+            </h3>
+          </div>
+        </div>
+
+        <div className="mt-6 flex items-center justify-center">
+          <div className={`relative flex h-52 w-52 items-center justify-center rounded-full border-[14px] bg-black/55 ${ringClass}`}>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
+              className="absolute inset-0 rounded-full"
+            >
+              <div className="absolute inset-[1rem] rounded-full border border-white/10" />
+              <div className="absolute inset-[2rem] rounded-full border border-accent/25" />
+              {Array.from({ length: 12 }).map((_, index) => (
+                <span
+                  key={`${category}-tick-${index}`}
+                  className="absolute left-1/2 top-1/2 h-1 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/65"
+                  style={{
+                    transform: `translate(-50%, -50%) rotate(${index * 30}deg) translateY(-5.1rem)`,
+                  }}
+                />
+              ))}
+            </motion.div>
+
+            <motion.div
+              key={`${category}-${activeIndex}`}
+              initial={{ opacity: 0, scale: 0.88 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.35 }}
+              className="relative z-10 flex h-28 w-28 items-center justify-center rounded-full border border-accent/35 bg-[radial-gradient(circle,rgba(57,255,20,0.28),rgba(0,0,0,0.92)_72%)] px-4 text-center shadow-[0_0_34px_rgba(57,255,20,0.2)]"
+            >
+              <span className="text-base font-semibold uppercase tracking-[0.18em] text-white">
+                {skills[activeIndex]}
+              </span>
+            </motion.div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {skills.map((skill, index) => (
+            <span
+              key={`${category}-${skill}`}
+              className={`rounded-full border px-3 py-2 text-xs uppercase tracking-[0.2em] transition ${
+                index === activeIndex
+                  ? "border-accent bg-accent text-black shadow-glow"
+                  : "border-accent/16 bg-black/30 text-white/62"
+              }`}
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.article>
+  );
+}

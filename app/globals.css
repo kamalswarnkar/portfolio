@@ -134,6 +134,15 @@ a {
   scrollbar-width: none;
 }
 
+@keyframes scan {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(240%);
+  }
+}
+
 @keyframes scanner-move {
   from {
     transform: translateX(-20%);
@@ -141,4 +150,49 @@ a {
   to {
     transform: translateX(20%);
   }
+}
+
+.omnitrix-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle 210px at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+      rgba(57, 255, 20, 0.28),
+      rgba(57, 255, 20, 0.08) 45%,
+      transparent 68%
+    );
+  pointer-events: none;
+}
+
+.omnitrix-text-cover {
+  opacity: 0;
+  transition: opacity 0.16s ease;
+  clip-path: circle(0 at var(--spotlight-x, 50%) var(--spotlight-y, 50%));
+  background:
+    radial-gradient(
+      circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+      rgba(10, 18, 11, 0.98) 0,
+      rgba(8, 14, 9, 0.98) 62%,
+      rgba(6, 10, 7, 0.96) 100%
+    );
+}
+
+.omnitrix-hidden-text {
+  color: rgba(235, 255, 230, 0.96);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  clip-path: circle(0 at var(--spotlight-x, 50%) var(--spotlight-y, 50%));
+  text-shadow: 0 0 18px rgba(57, 255, 20, 0.28);
+}
+
+.omnitrix-spotlight:hover .omnitrix-text-cover {
+  opacity: 1;
+  clip-path: circle(220px at var(--spotlight-x, 50%) var(--spotlight-y, 50%));
+}
+
+.omnitrix-spotlight:hover .omnitrix-hidden-text {
+  opacity: 1;
+  clip-path: circle(220px at var(--spotlight-x, 50%) var(--spotlight-y, 50%));
 }

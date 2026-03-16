@@ -11,13 +11,14 @@ type TrailPoint = {
   y: number;
 };
 
-export function CustomCursor() {
+export function CustomCursor({ enabled = true }: { enabled?: boolean }) {
   const { isMobile, reduceMotion } = useDeviceTier();
   const [position, setPosition] = useState({ x: -100, y: -100 });
   const [trail, setTrail] = useState<TrailPoint[]>([]);
+  const [mode, setMode] = useState<"default" | "omnitrix">("default");
 
   useEffect(() => {
-    if (isMobile) {
+    if (isMobile || !enabled) {
       return;
     }
 
@@ -27,6 +28,9 @@ export function CustomCursor() {
     let nextId = 0;
     const handlePointerMove = (event: PointerEvent) => {
       setPosition({ x: event.clientX, y: event.clientY });
+      const target = event.target as HTMLElement | null;
+      const nextMode = target?.closest("[data-cursor-mode='omnitrix']") ? "omnitrix" : "default";
+      setMode(nextMode);
 
       if (reduceMotion) {
         return;
@@ -45,9 +49,9 @@ export function CustomCursor() {
       document.body.style.cursor = "";
       window.removeEventListener("pointermove", handlePointerMove);
     };
-  }, [isMobile, reduceMotion]);
+  }, [enabled, isMobile, reduceMotion]);
 
-  if (isMobile) {
+  if (isMobile || !enabled) {
     return null;
   }
 
@@ -64,9 +68,17 @@ export function CustomCursor() {
       ))}
 
       <motion.div
-        animate={{ x: position.x - 18, y: position.y - 18 }}
+        animate={{
+          x: position.x - (mode === "omnitrix" ? 118 : 18),
+          y: position.y - (mode === "omnitrix" ? 118 : 18),
+          width: mode === "omnitrix" ? 236 : 36,
+          height: mode === "omnitrix" ? 236 : 36,
+          backgroundColor: mode === "omnitrix" ? "rgba(57,255,20,0.22)" : "rgba(57,255,20,0.1)",
+          borderColor: mode === "omnitrix" ? "rgba(57,255,20,0.95)" : "rgba(57,255,20,0.7)",
+        }}
         transition={{ type: "spring", stiffness: 520, damping: 28, mass: 0.2 }}
         className="absolute h-9 w-9 rounded-full border border-accent/70 bg-accent/10 shadow-glow"
+        style={{ mixBlendMode: mode === "omnitrix" ? "screen" : "normal" }}
       />
       <motion.div
         animate={{ x: position.x - 4, y: position.y - 4 }}
