@@ -103,11 +103,11 @@ export function PortfolioApp() {
               items={[
                 { id: "banner", label: "Start" },
                 { id: "about", label: "Intro" },
-                { id: "training", label: "Train" },
                 { id: "education", label: "Edu" },
                 { id: "skills", label: "Skills" },
                 { id: "projects", label: "Work" },
                 { id: "certificates", label: "Proof" },
+                { id: "training", label: "Train" },
                 { id: "contact", label: "Contact" },
               ]}
               activeSection={activeSection}
@@ -157,11 +157,6 @@ export function PortfolioApp() {
                 }}
                 isActivated
               />
-              <TrainingSection
-                ref={(node) => {
-                  sectionRefs.current.training = node;
-                }}
-              />
               <EducationSection
                 ref={(node) => {
                   sectionRefs.current.education = node;
@@ -180,6 +175,11 @@ export function PortfolioApp() {
               <CertificatesSection
                 ref={(node) => {
                   sectionRefs.current.certificates = node;
+                }}
+              />
+              <TrainingSection
+                ref={(node) => {
+                  sectionRefs.current.training = node;
                 }}
               />
               <ContactSection

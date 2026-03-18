@@ -9,6 +9,7 @@ import {
   contacts,
   education,
   projects,
+  resumeFile,
   resumePreview,
   skillWatches,
   trainings,
@@ -17,6 +18,7 @@ import {
 export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: () => void }>(
   function ActivationBannerSection({ onExploreWork }, ref) {
     const [showResumePreview, setShowResumePreview] = useState(false);
+    const orderedProjects = [...projects].sort((a, b) => parsePeriodValue(b.period) - parsePeriodValue(a.period));
 
     return (
       <>
@@ -88,7 +90,7 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                   </div>
                 </div>
 
-                <div className="relative z-10 mt-6 flex flex-wrap gap-2">
+                <div className="relative z-10 mt-6 flex flex-wrap items-center gap-2">
                   {resumePreview.quickStats.map((stat) => (
                     <span
                       key={stat}
@@ -97,6 +99,15 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                       {stat}
                     </span>
                   ))}
+                  <a
+                    href={resumeFile.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                    className="ml-auto inline-flex h-16 w-16 items-center justify-center rounded-full border border-accent/50 bg-accent text-[10px] font-bold uppercase leading-tight tracking-[0.12em] text-black shadow-[0_0_28px_rgba(57,255,20,0.55)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_rgba(57,255,20,0.75)]"
+                  >
+                    View CV
+                  </a>
                 </div>
               </button>
             </div>
@@ -208,7 +219,7 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                         <div className="rounded-[1.6rem] border border-accent/18 bg-black/30 p-5">
                           <p className="text-sm uppercase tracking-[0.34em] text-accent/70">Projects</p>
                           <div className="mt-4 space-y-4">
-                            {projects.map((project) => (
+                            {orderedProjects.map((project) => (
                               <div key={project.id} className="border-b border-white/10 pb-4 last:border-0 last:pb-0">
                                 <p className="text-lg text-white/86">{project.name}</p>
                                 <p className="mt-1 text-sm uppercase tracking-[0.18em] text-accent/72">
@@ -248,3 +259,27 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
     );
   },
 );
+
+function parsePeriodValue(period: string) {
+  const monthMap: Record<string, number> = {
+    jan: 1,
+    feb: 2,
+    mar: 3,
+    apr: 4,
+    may: 5,
+    jun: 6,
+    jul: 7,
+    aug: 8,
+    sep: 9,
+    oct: 10,
+    nov: 11,
+    dec: 12,
+  };
+
+  const cleaned = period.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  const monthToken = Object.keys(monthMap).find((token) => cleaned.includes(token));
+  const yearMatch = cleaned.match(/(20\d{2})/);
+  const year = yearMatch ? Number(yearMatch[1]) : 0;
+  const month = monthToken ? monthMap[monthToken] : 0;
+  return year * 100 + month;
+}

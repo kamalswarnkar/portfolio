@@ -20,13 +20,14 @@ const projectThemeMap: Record<string, { core: string }> = {
 
 export const ProjectsSection = forwardRef<HTMLElement, {}>(function ProjectsSection(_props, ref) {
   const [openProject, setOpenProject] = useState<string | null>(null);
+  const orderedProjects = [...projects].sort((a, b) => parsePeriodValue(b.period) - parsePeriodValue(a.period));
 
   return (
     <section id="projects" ref={ref} className="scroll-mt-24 pt-8">
       <SectionHeading eyebrow="Mission Logs" title="Project Universe" />
 
       <div className="mt-10 space-y-5">
-        {projects.map((project, index) => {
+        {orderedProjects.map((project, index) => {
           const isOpen = openProject === project.id;
           const theme = projectThemeMap[project.alienVibe] ?? projectThemeMap.Upgrade;
 
@@ -142,6 +143,30 @@ export const ProjectsSection = forwardRef<HTMLElement, {}>(function ProjectsSect
     </section>
   );
 });
+
+function parsePeriodValue(period: string) {
+  const monthMap: Record<string, number> = {
+    jan: 1,
+    feb: 2,
+    mar: 3,
+    apr: 4,
+    may: 5,
+    jun: 6,
+    jul: 7,
+    aug: 8,
+    sep: 9,
+    oct: 10,
+    nov: 11,
+    dec: 12,
+  };
+
+  const cleaned = period.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  const monthToken = Object.keys(monthMap).find((token) => cleaned.includes(token));
+  const yearMatch = cleaned.match(/(20\d{2})/);
+  const year = yearMatch ? Number(yearMatch[1]) : 0;
+  const month = monthToken ? monthMap[monthToken] : 0;
+  return year * 100 + month;
+}
 
 function ProjectPreviewCard({ projectId }: { projectId: string }) {
   if (projectId === "RSX-026") {

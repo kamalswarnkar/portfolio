@@ -1,12 +1,12 @@
 export const resumeFile = {
   label: "Download CV",
-  href: "/assets/Kamal-Swarnkar-CV.docx",
+  href: "/assets/Kamal_Swarnkar_CV.pdf",
 };
 
 export const resumePreview = {
   badge: "Resume Archive",
   title: "Curriculum Vitae",
-  quickStats: ["Full Stack", "ML Systems", "Django", "React"],
+  quickStats: ["Full Stack", "ML Systems", "Django", "Python", "AI"],
 };
 
 export const introData = {
@@ -103,7 +103,7 @@ export const skillWatches = [
     style: "Field Dial",
     accent: "from-emerald-300/28 via-cyan-300/12 to-transparent",
     ringClass: "border-cyan-300/35 shadow-[0_0_36px_rgba(34,211,238,0.18)]",
-    skills: ["Git", "Linux", "SolidWorks", "OpenRocket", "VSCode"],
+    skills: ["Git", "Linux", "Docker", "SolidWorks", "OpenRocket", "VSCode", "PostgreSQL", "MongoDB"],
   },
   {
     category: "Libraries",
@@ -150,18 +150,20 @@ export const projects = [
   },
   {
     id: "AIC-025",
-    name: "AI-Enhanced Career Guidance System",
-    period: "December 2025",
-    status: "Model Ready",
+    name: "AI Career Lab",
+    period: "March 2026",
+    status: "Live + Model Ready",
     description:
-      "Multi-class supervised learning system for mapping student skill and academic patterns to career path recommendations.",
+      "ML-based career guidance platform using TF-IDF and multi-class classification for career prediction and skill-gap analysis.",
     details: [
-      "Trained Logistic Regression, Random Forest, and XGBoost classifiers for career path prediction.",
-      "Validated model behavior with macro precision, recall, F1, ROC-AUC, Cohen's Kappa, MCC, and confusion analysis.",
+      "Architected and evaluated RF, SVM, and LR models, achieving 86.58% test accuracy with a 1.23% overfitting gap.",
+      "Benchmarked precision, recall, and F1 across models; the best setup reached ~86.6% on unseen data.",
+      "Built a robust training pipeline with explicit train-test gap analysis to maintain strong generalization.",
+      "Developed a modular Django app supporting real-time inference for career prediction and skill-gap analysis.",
     ],
     stack: ["Python", "Scikit-learn", "XGBoost", "Pandas", "NumPy"],
-    github: "https://github.com/kamalswarnkar/Career-Guidance-System",
-    demo: "",
+    github: "https://github.com/kamalswarnkar/AI-Career-Lab",
+    demo: "https://ai-career-lab.onrender.com/",
     alienVibe: "Brainstorm",
     accent: "from-cyan-300/26 via-emerald-300/10 to-transparent",
   },
@@ -178,7 +180,7 @@ export const projects = [
     ],
     stack: ["MongoDB", "Express.js", "Node.js", "React.js"],
     github: "https://github.com/kamalswarnkar/FinTrackAI",
-    demo: "https://fintackai.vercel.app/",
+    demo: "https://fintrackai-six.vercel.app/",
     alienVibe: "Upgrade",
     accent: "from-amber-300/24 via-orange-300/10 to-transparent",
   },

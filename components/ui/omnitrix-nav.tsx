@@ -118,7 +118,14 @@ export function OmnitrixNav({
             <div className="absolute inset-[-0.85rem] rounded-[2.4rem] bg-[radial-gradient(circle,rgba(57,255,20,0.24),transparent_60%)] blur-lg" />
           ) : null}
           <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-accent/50 bg-black/60">
-            <div className="h-6 w-6 rotate-45 border-x-[3px] border-y-[3px] border-accent shadow-[0_0_16px_rgba(57,255,20,0.45)]" />
+            {isOpen ? (
+              <div className="h-6 w-6 rotate-45 border-x-[3px] border-y-[3px] border-accent shadow-[0_0_16px_rgba(57,255,20,0.45)]" />
+            ) : (
+              <div
+                className="h-7 w-7 bg-accent shadow-[0_0_18px_rgba(57,255,20,0.55)]"
+                style={{ clipPath: "polygon(15% 0%, 85% 0%, 58% 50%, 85% 100%, 15% 100%, 42% 50%)" }}
+              />
+            )}
           </div>
         </button>
       </motion.div>
