@@ -56,6 +56,13 @@ body {
   body {
     cursor: auto;
   }
+
+  /* Disable hover-only spotlight — can't be triggered on touch */
+  .omnitrix-spotlight:hover .omnitrix-text-cover,
+  .omnitrix-spotlight:hover .omnitrix-hidden-text {
+    opacity: 0;
+    clip-path: circle(0 at 50% 50%);
+  }
 }
 
 a {
@@ -66,6 +73,8 @@ a {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  /* Remove 300ms tap delay on mobile */
+  touch-action: manipulation;
 }
 
 .panel-frame {

@@ -1,11 +1,11 @@
 export const siteConfig = {
   particleCount: {
     desktop: 60,
-    mobile: 28,
+    mobile: 18,
   },
   starCount: {
     desktop: 45,
-    mobile: 22,
+    mobile: 14,
   },
   particleGlow: 0.9,
   animationSpeed: 1,

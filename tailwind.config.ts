@@ -47,6 +47,9 @@ const config: Config = {
           "50%": { transform: "translateY(-12px)" },
         },
       },
+      screens: {
+        xs: "360px",
+      },
     },
   },
   plugins: [],

@@ -19,14 +19,10 @@ export function ParticleField() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
+    if (!canvas) return;
 
     const context = canvas.getContext("2d");
-    if (!context) {
-      return;
-    }
+    if (!context) return;
 
     const pointer = { x: 0, y: 0 };
     let animationFrame = 0;
@@ -35,7 +31,7 @@ export function ParticleField() {
     let particles: Particle[] = [];
 
     const totalParticles = reduceMotion
-      ? Math.max(14, Math.floor(siteConfig.particleCount.mobile / 2))
+      ? Math.max(10, Math.floor(siteConfig.particleCount.mobile / 2))
       : isMobile
         ? siteConfig.particleCount.mobile
         : siteConfig.particleCount.desktop;
@@ -59,13 +55,9 @@ export function ParticleField() {
       }));
     };
 
-    // Set shadow properties once per frame, outside the per-particle loop.
-    // Canvas shadowBlur is an expensive GPU operation; applying it per-particle
-    // (as a per-draw-call filter) was the single biggest perf cost.
     const render = () => {
       context.clearRect(0, 0, width, height);
 
-      // --- Update particle positions ---
       const glowValues: number[] = [];
       for (let i = 0; i < particles.length; i++) {
         const particle = particles[i];
@@ -76,7 +68,7 @@ export function ParticleField() {
         if (particle.x < -20 || particle.x > width + 20) particle.vx *= -1;
         if (particle.y < -20 || particle.y > height + 20) particle.vy *= -1;
 
-        if (!reduceMotion) {
+        if (!reduceMotion && !isMobile) {
           const dx = pointer.x - particle.x;
           const dy = pointer.y - particle.y;
           const distance = Math.hypot(dx, dy);
@@ -89,9 +81,11 @@ export function ParticleField() {
         glowValues[i] = 0.4 + Math.sin(particle.pulse) * 0.35 * siteConfig.particleGlow;
       }
 
-      // --- Draw all particles in one batched pass (single shadowBlur setup) ---
-      context.shadowColor = "rgba(57,255,20,0.8)";
-      context.shadowBlur = 14;
+      // On mobile: no shadow (very expensive GPU op) — just plain circles
+      if (!isMobile) {
+        context.shadowColor = "rgba(57,255,20,0.8)";
+        context.shadowBlur = 14;
+      }
       context.fillStyle = "rgba(57,255,20,0.85)";
       context.beginPath();
       for (let i = 0; i < particles.length; i++) {
@@ -102,9 +96,9 @@ export function ParticleField() {
       }
       context.fill();
 
-      // --- Draw connection lines (no shadow needed here) ---
+      // Reset shadow before drawing lines
       context.shadowBlur = 0;
-      const lineThreshold = isMobile ? 96 : 128;
+      const lineThreshold = isMobile ? 72 : 128;
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
@@ -135,7 +129,7 @@ export function ParticleField() {
     render();
 
     window.addEventListener("resize", resize);
-    window.addEventListener("pointermove", handlePointer);
+    if (!isMobile) window.addEventListener("pointermove", handlePointer);
 
     return () => {
       window.removeEventListener("resize", resize);

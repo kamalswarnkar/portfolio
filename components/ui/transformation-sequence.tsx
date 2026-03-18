@@ -3,6 +3,10 @@
 import { motion } from "framer-motion";
 
 export function TransformationSequence() {
+  // Detect mobile to reduce animation complexity
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const rayCount = isMobile ? 6 : 12;
+
   return (
     <motion.div
       className="pointer-events-none fixed inset-0 z-[80] overflow-hidden bg-black"
@@ -25,12 +29,13 @@ export function TransformationSequence() {
         transition={{ duration: 2.55, ease: "easeOut" }}
       />
 
-      {Array.from({ length: 12 }).map((_, index) => (
+      {/* Reduced ray count on mobile for performance */}
+      {Array.from({ length: rayCount }).map((_, index) => (
         <motion.div
           key={index}
           className="absolute left-1/2 top-1/2 h-[28rem] w-[0.4rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-b from-transparent via-accent to-transparent"
-          initial={{ rotate: index * 30, scaleY: 0, opacity: 0 }}
-          animate={{ rotate: index * 30 + 28, scaleY: [0, 0.5, 1.15, 1.35, 0], opacity: [0, 0.3, 0.82, 0.95, 0] }}
+          initial={{ rotate: index * (360 / rayCount), scaleY: 0, opacity: 0 }}
+          animate={{ rotate: index * (360 / rayCount) + 28, scaleY: [0, 0.5, 1.15, 1.35, 0], opacity: [0, 0.3, 0.82, 0.95, 0] }}
           transition={{ duration: 1.9, delay: 0.22, ease: "easeOut" }}
         />
       ))}

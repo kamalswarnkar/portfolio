@@ -22,9 +22,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(function He
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
-    if (isTransforming) {
-      return;
-    }
+    if (isTransforming) return;
 
     const timer = window.setInterval(() => {
       setMessageIndex((current) => (current < bootMessages.length - 1 ? current + 1 : current));
@@ -52,11 +50,12 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(function He
         className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-8"
       >
         <div className="relative flex flex-col items-center">
+          {/* Omnitrix button — xs-safe sizing */}
           <motion.button
             whileHover={{ scale: 1.012 }}
             whileTap={{ scale: 0.982 }}
             onClick={onActivate}
-            className="group relative h-[24rem] w-[24rem] rounded-full md:h-[31rem] md:w-[31rem]"
+            className="group relative h-[17rem] w-[17rem] rounded-full xs:h-[19rem] xs:w-[19rem] sm:h-[24rem] sm:w-[24rem] md:h-[31rem] md:w-[31rem]"
             aria-label="Activate portfolio"
             animate={{
               scale: isTransforming ? [1, 0.96, 1.08] : 1,
@@ -236,7 +235,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(function He
             </motion.p>
           </div>
 
-          <p className="mt-4 text-center text-xs uppercase tracking-[0.38em] text-white/45 md:text-sm">
+          <p className="mt-4 text-center text-xs uppercase tracking-[0.28em] text-white/45 sm:tracking-[0.38em] md:text-sm">
             Tap the core to trigger transformation
           </p>
         </div>

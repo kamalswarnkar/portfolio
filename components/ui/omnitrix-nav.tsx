@@ -133,16 +133,18 @@ export function OmnitrixNav({
       <motion.nav
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
-        className="fixed bottom-4 left-1/2 z-40 flex w-[calc(100vw-1.25rem)] -translate-x-1/2 items-center gap-2 overflow-x-auto rounded-full border border-accent/30 bg-black/60 px-3 py-2 backdrop-blur-xl xl:hidden hide-scrollbar"
+        className="fixed bottom-4 left-1/2 z-40 flex w-[calc(100vw-1rem)] -translate-x-1/2 items-center gap-1.5 overflow-x-auto rounded-full border border-accent/30 bg-black/70 px-3 py-2 backdrop-blur-xl xl:hidden hide-scrollbar"
+        style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
       >
         {items.map((item) => (
           <button
             key={item.id}
             onClick={() => onSelect(item.id)}
-            className={`shrink-0 rounded-full px-3 py-2 text-[11px] uppercase tracking-[0.24em] ${
+            style={{ scrollSnapAlign: "center" }}
+            className={`shrink-0 rounded-full px-3.5 py-2.5 text-[11px] uppercase tracking-[0.22em] transition-colors ${
               activeSection === item.id
                 ? "bg-accent text-black shadow-glow"
-                : "bg-white/5 text-white/80"
+                : "bg-white/5 text-white/80 active:bg-white/15"
             }`}
           >
             {item.label}
