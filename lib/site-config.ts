@@ -1,11 +1,11 @@
 export const siteConfig = {
   particleCount: {
-    desktop: 95,
-    mobile: 34,
+    desktop: 60,
+    mobile: 28,
   },
   starCount: {
-    desktop: 70,
-    mobile: 28,
+    desktop: 45,
+    mobile: 22,
   },
   particleGlow: 0.9,
   animationSpeed: 1,
@@ -13,7 +13,7 @@ export const siteConfig = {
   pulseFrequencyMs: 4200,
   nebulaOpacity: 0.2,
   cursorTrailCount: {
-    desktop: 18,
+    desktop: 10,
     mobile: 0,
   },
 };

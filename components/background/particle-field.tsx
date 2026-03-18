@@ -35,7 +35,7 @@ export function ParticleField() {
     let particles: Particle[] = [];
 
     const totalParticles = reduceMotion
-      ? Math.max(18, Math.floor(siteConfig.particleCount.mobile / 2))
+      ? Math.max(14, Math.floor(siteConfig.particleCount.mobile / 2))
       : isMobile
         ? siteConfig.particleCount.mobile
         : siteConfig.particleCount.desktop;
@@ -59,11 +59,16 @@ export function ParticleField() {
       }));
     };
 
-    // The particle field uses a single requestAnimationFrame loop to keep motion smooth.
+    // Set shadow properties once per frame, outside the per-particle loop.
+    // Canvas shadowBlur is an expensive GPU operation; applying it per-particle
+    // (as a per-draw-call filter) was the single biggest perf cost.
     const render = () => {
       context.clearRect(0, 0, width, height);
 
-      particles.forEach((particle, index) => {
+      // --- Update particle positions ---
+      const glowValues: number[] = [];
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i];
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.pulse += 0.014;
@@ -71,36 +76,52 @@ export function ParticleField() {
         if (particle.x < -20 || particle.x > width + 20) particle.vx *= -1;
         if (particle.y < -20 || particle.y > height + 20) particle.vy *= -1;
 
-        const dx = pointer.x - particle.x;
-        const dy = pointer.y - particle.y;
-        const distance = Math.hypot(dx, dy);
-
-        if (distance < 180 && distance > 0 && !reduceMotion) {
-          particle.x -= (dx / distance) * 0.18;
-          particle.y -= (dy / distance) * 0.18;
+        if (!reduceMotion) {
+          const dx = pointer.x - particle.x;
+          const dy = pointer.y - particle.y;
+          const distance = Math.hypot(dx, dy);
+          if (distance < 180 && distance > 0) {
+            particle.x -= (dx / distance) * 0.18;
+            particle.y -= (dy / distance) * 0.18;
+          }
         }
 
-        const glow = 0.4 + Math.sin(particle.pulse) * 0.35 * siteConfig.particleGlow;
-        context.beginPath();
-        context.arc(particle.x, particle.y, particle.radius + glow, 0, Math.PI * 2);
-        context.fillStyle = `rgba(57,255,20,${0.45 + glow * 0.4})`;
-        context.shadowColor = "rgba(57,255,20,0.8)";
-        context.shadowBlur = 16;
-        context.fill();
+        glowValues[i] = 0.4 + Math.sin(particle.pulse) * 0.35 * siteConfig.particleGlow;
+      }
 
-        for (let next = index + 1; next < particles.length; next += 1) {
-          const other = particles[next];
-          const lineDistance = Math.hypot(particle.x - other.x, particle.y - other.y);
-          if (lineDistance < (isMobile ? 96 : 128)) {
+      // --- Draw all particles in one batched pass (single shadowBlur setup) ---
+      context.shadowColor = "rgba(57,255,20,0.8)";
+      context.shadowBlur = 14;
+      context.fillStyle = "rgba(57,255,20,0.85)";
+      context.beginPath();
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const r = p.radius + glowValues[i];
+        context.moveTo(p.x + r, p.y);
+        context.arc(p.x, p.y, r, 0, Math.PI * 2);
+      }
+      context.fill();
+
+      // --- Draw connection lines (no shadow needed here) ---
+      context.shadowBlur = 0;
+      const lineThreshold = isMobile ? 96 : 128;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const other = particles[j];
+          const dx = p.x - other.x;
+          const dy = p.y - other.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < lineThreshold) {
             context.beginPath();
-            context.strokeStyle = `rgba(57,255,20,${0.12 - lineDistance / 1200})`;
+            context.strokeStyle = `rgba(57,255,20,${0.12 - dist / 1200})`;
             context.lineWidth = 1;
-            context.moveTo(particle.x, particle.y);
+            context.moveTo(p.x, p.y);
             context.lineTo(other.x, other.y);
             context.stroke();
           }
         }
-      });
+      }
 
       animationFrame = window.requestAnimationFrame(render);
     };

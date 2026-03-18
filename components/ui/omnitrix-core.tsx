@@ -18,9 +18,10 @@ export function OmnitrixCore({ isTransforming = false }: { isTransforming?: bool
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.set(0, 0, 7);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
     const size = isMobile ? 280 : 420;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.6 : 2));
+    // Cap pixel ratio at 1.5 to reduce GPU fragment shader load
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(size, size);
     mount.appendChild(renderer.domElement);
 
@@ -45,9 +46,9 @@ export function OmnitrixCore({ isTransforming = false }: { isTransforming?: bool
       roughness: 0.2,
     });
 
-    const outerRing = new THREE.Mesh(new THREE.TorusGeometry(2.05, 0.24, 24, 96), ringMaterial);
-    const innerRing = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.14, 18, 96), ringMaterial);
-    const core = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.02, 0.26, 48), coreMaterial);
+    const outerRing = new THREE.Mesh(new THREE.TorusGeometry(2.05, 0.24, 16, 64), ringMaterial);
+    const innerRing = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.14, 12, 64), ringMaterial);
+    const core = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.02, 0.26, 32), coreMaterial);
     core.rotation.x = Math.PI / 2;
 
     scene.add(outerRing, innerRing, core);
@@ -99,8 +100,15 @@ export function OmnitrixCore({ isTransforming = false }: { isTransforming?: bool
     scene.add(clamps);
 
     let frameId = 0;
-    const render = () => {
+    // Cap Three.js to 30 FPS — this is an ornamental element, 60 FPS is wasteful
+    const TARGET_INTERVAL = 1000 / 30;
+    let lastTime = 0;
+
+    const render = (timestamp: number) => {
       frameId = requestAnimationFrame(render);
+      if (timestamp - lastTime < TARGET_INTERVAL) return;
+      lastTime = timestamp;
+
       outerRing.rotation.z += isTransforming ? 0.045 : 0.006;
       innerRing.rotation.z -= isTransforming ? 0.055 : 0.008;
 
@@ -109,13 +117,14 @@ export function OmnitrixCore({ isTransforming = false }: { isTransforming?: bool
         hourglass.rotation.z += isTransforming ? 0.035 : 0.006;
       }
 
-      const scale = 1 + Math.sin(Date.now() * 0.003) * (isTransforming ? 0.1 : 0.03);
+      const t = Date.now();
+      const scale = 1 + Math.sin(t * 0.003) * (isTransforming ? 0.1 : 0.03);
       core.scale.setScalar(scale);
-      hourglass.scale.setScalar(1 + Math.sin(Date.now() * 0.004) * 0.02);
+      hourglass.scale.setScalar(1 + Math.sin(t * 0.004) * 0.02);
       renderer.render(scene, camera);
     };
 
-    render();
+    frameId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(frameId);

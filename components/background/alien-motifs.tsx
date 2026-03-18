@@ -1,8 +1,9 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "framer-motion";
 
-export function AlienMotifs({ active = true }: { active?: boolean }) {
+export const AlienMotifs = memo(function AlienMotifs({ active = true }: { active?: boolean }) {
   return (
     <div className="absolute inset-0 overflow-hidden opacity-95">
       <motion.div
@@ -11,11 +12,12 @@ export function AlienMotifs({ active = true }: { active?: boolean }) {
         transition={{ duration: 5.4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
         <div className="absolute inset-x-10 bottom-0 h-40 rounded-t-[999px] bg-[linear-gradient(180deg,rgba(255,214,64,0),rgba(255,128,0,0.34),rgba(255,62,0,0.68))] blur-md" />
-        {Array.from({ length: 5 }).map((_, index) => (
+        {/* Reduced from 5 → 3 flame elements */}
+        {Array.from({ length: 3 }).map((_, index) => (
           <motion.div
             key={index}
             className="absolute bottom-8 w-8 rounded-full bg-[radial-gradient(circle,rgba(255,235,120,0.9),rgba(255,108,0,0.72),transparent_72%)]"
-            style={{ left: `${18 + index * 14}%`, height: `${70 + index * 14}px` }}
+            style={{ left: `${18 + index * 20}%`, height: `${70 + index * 20}px` }}
             animate={{ y: [0, -(18 + index * 8), 0], scaleY: [1, 1.16, 1] }}
             transition={{ duration: 2 + index * 0.2, repeat: Number.POSITIVE_INFINITY }}
           />
@@ -27,12 +29,11 @@ export function AlienMotifs({ active = true }: { active?: boolean }) {
         animate={active ? { rotate: [0, 12, 0], opacity: [0.35, 0.72, 0.35] } : { opacity: 0.14 }}
         transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
+        {/* Reduced from 5 → 3 crystal shards */}
         {[
           "left-6 top-10",
-          "left-28 top-0",
           "right-10 top-20",
           "left-16 bottom-10",
-          "right-16 bottom-6",
         ].map((slot, index) => (
           <motion.div
             key={slot}
@@ -67,12 +68,13 @@ export function AlienMotifs({ active = true }: { active?: boolean }) {
         transition={{ duration: 7.2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
         <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.06),rgba(170,150,255,0.12)_28%,rgba(74,28,110,0.15)_48%,transparent_74%)] blur-xl" />
-        {Array.from({ length: 4 }).map((_, index) => (
+        {/* Reduced from 4 → 3 aurora beams */}
+        {Array.from({ length: 3 }).map((_, index) => (
           <motion.div
             key={index}
             className="absolute left-1/2 top-1/2 h-28 w-10 -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(163,132,255,0.12),transparent)] blur-md"
             style={{
-              transform: `translate(-50%, -50%) rotate(${index * 24 - 28}deg) translateY(${30 + index * 10}px)`,
+              transform: `translate(-50%, -50%) rotate(${index * 28 - 28}deg) translateY(${30 + index * 10}px)`,
             }}
             animate={{ scaleY: [0.8, 1.2, 0.8], opacity: [0.18, 0.5, 0.18] }}
             transition={{ duration: 3.8 + index * 0.35, repeat: Number.POSITIVE_INFINITY }}
@@ -81,4 +83,4 @@ export function AlienMotifs({ active = true }: { active?: boolean }) {
       </motion.div>
     </div>
   );
-}
+});

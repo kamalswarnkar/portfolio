@@ -27,6 +27,7 @@ export function OmnitrixPortal({
           background:
             "conic-gradient(from 0deg, rgba(57,255,20,0) 0deg, rgba(57,255,20,0.55) 42deg, rgba(57,255,20,0) 72deg, rgba(57,255,20,0) 180deg, rgba(57,255,20,0.55) 222deg, rgba(57,255,20,0) 252deg)",
           boxShadow: "0 0 80px rgba(57,255,20,0.1)",
+          willChange: "transform",
         }}
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(57,255,20,0.12),transparent_24%,transparent_55%,rgba(57,255,20,0.05)_72%,transparent_100%)]" />
