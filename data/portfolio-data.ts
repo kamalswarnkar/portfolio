@@ -124,7 +124,7 @@ export const skillWatches = [
     style: "Signal Dial",
     accent: "from-white/18 via-accent/8 to-transparent",
     ringClass: "border-white/20 shadow-[0_0_36px_rgba(255,255,255,0.08)]",
-    skills: ["Self-motivated", "Articulate", "Organized", "Analytical", "Leadership"],
+    skills: ["Self-motivated", "Articulate", "Organized", "Leadership"],
   },
 ];
 

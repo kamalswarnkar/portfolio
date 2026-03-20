@@ -55,7 +55,17 @@ export function ParticleField() {
       }));
     };
 
-    const render = () => {
+    // Cap particle canvas at 30fps — it's a subtle background, 60fps wastes GPU
+    const TARGET_FPS = 30;
+    const FRAME_INTERVAL = 1000 / TARGET_FPS;
+    let lastFrameTime = 0;
+    const lineThreshold = isMobile ? 50 : 100;
+
+    const render = (timestamp: number) => {
+      animationFrame = window.requestAnimationFrame(render);
+      if (timestamp - lastFrameTime < FRAME_INTERVAL) return;
+      lastFrameTime = timestamp;
+
       context.clearRect(0, 0, width, height);
 
       const glowValues: number[] = [];
@@ -72,19 +82,19 @@ export function ParticleField() {
           const dx = pointer.x - particle.x;
           const dy = pointer.y - particle.y;
           const distance = Math.hypot(dx, dy);
-          if (distance < 180 && distance > 0) {
-            particle.x -= (dx / distance) * 0.18;
-            particle.y -= (dy / distance) * 0.18;
+          if (distance < 160 && distance > 0) {
+            particle.x -= (dx / distance) * 0.15;
+            particle.y -= (dy / distance) * 0.15;
           }
         }
 
         glowValues[i] = 0.4 + Math.sin(particle.pulse) * 0.35 * siteConfig.particleGlow;
       }
 
-      // On mobile: no shadow (very expensive GPU op) — just plain circles
+      // On mobile: no shadow (expensive GPU op) — plain circles only
       if (!isMobile) {
-        context.shadowColor = "rgba(57,255,20,0.8)";
-        context.shadowBlur = 14;
+        context.shadowColor = "rgba(57,255,20,0.7)";
+        context.shadowBlur = 10;
       }
       context.fillStyle = "rgba(57,255,20,0.85)";
       context.beginPath();
@@ -96,28 +106,26 @@ export function ParticleField() {
       }
       context.fill();
 
-      // Reset shadow before drawing lines
       context.shadowBlur = 0;
-      const lineThreshold = isMobile ? 72 : 128;
+      context.lineWidth = 1;
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
           const other = particles[j];
           const dx = p.x - other.x;
           const dy = p.y - other.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < lineThreshold) {
+          // Use squared distance to skip sqrt when over threshold
+          const distSq = dx * dx + dy * dy;
+          if (distSq < lineThreshold * lineThreshold) {
+            const dist = Math.sqrt(distSq);
             context.beginPath();
-            context.strokeStyle = `rgba(57,255,20,${0.12 - dist / 1200})`;
-            context.lineWidth = 1;
+            context.strokeStyle = `rgba(57,255,20,${0.12 - dist / 1000})`;
             context.moveTo(p.x, p.y);
             context.lineTo(other.x, other.y);
             context.stroke();
           }
         }
       }
-
-      animationFrame = window.requestAnimationFrame(render);
     };
 
     const handlePointer = (event: PointerEvent) => {
@@ -126,7 +134,7 @@ export function ParticleField() {
     };
 
     resize();
-    render();
+    animationFrame = window.requestAnimationFrame(render);
 
     window.addEventListener("resize", resize);
     if (!isMobile) window.addEventListener("pointermove", handlePointer);

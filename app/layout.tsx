@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   title: "Kamal Swarnkar",
   description:
     "A futuristic Ben 10 inspired personal portfolio for software developer Kamal Swarnkar.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
