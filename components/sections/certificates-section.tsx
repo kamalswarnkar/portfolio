@@ -27,7 +27,9 @@ export const CertificatesSection = forwardRef<HTMLElement, {}>(function Certific
             transition={{ duration: 0.5, delay: index * 0.08 }}
             whileHover={{ y: -8, boxShadow: "0 0 34px rgba(57,255,20,0.22)" }}
             onClick={() => setSelectedCertificate(certificate)}
-            className="panel-frame clip-corners relative overflow-hidden rounded-[2rem] p-5 text-left"
+            className={`panel-frame clip-corners relative h-full overflow-hidden rounded-[2rem] p-5 text-left ${
+              certificates.length % 3 === 1 && index === certificates.length - 1 ? "xl:col-start-2" : ""
+            }`}
           >
             <div className="absolute inset-0 bg-[linear-gradient(150deg,rgba(57,255,20,0.18),transparent_55%,rgba(255,255,255,0.06))]" />
             <div className="relative z-10">
@@ -94,13 +96,24 @@ export const CertificatesSection = forwardRef<HTMLElement, {}>(function Certific
                 </div>
 
                 <div className="hide-scrollbar overflow-y-auto rounded-[2rem] border border-accent/22 bg-black/45 p-3 md:p-4">
-                  <div className="rounded-[1.6rem] border border-accent/18 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.16),rgba(0,0,0,0.92)_78%)] p-2 md:p-3">
-                    <img
-                      src={selectedCertificate.image}
-                      alt={`${selectedCertificate.title} certificate`}
-                      className="mx-auto h-auto max-h-[68vh] w-auto max-w-full rounded-[1rem] border border-white/10 object-contain"
-                    />
-                  </div>
+                  {selectedCertificate.image ? (
+                    <div className="rounded-[1.6rem] border border-accent/18 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.16),rgba(0,0,0,0.92)_78%)] p-2 md:p-3">
+                      <img
+                        src={selectedCertificate.image}
+                        alt={`${selectedCertificate.title} certificate`}
+                        className="mx-auto h-auto max-h-[68vh] w-auto max-w-full rounded-[1rem] border border-white/10 object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <div className="rounded-[1.6rem] border border-accent/18 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.16),rgba(0,0,0,0.92)_78%)] p-8 text-center">
+                      <p className="text-sm uppercase tracking-[0.3em] text-accent/72">Certificate Recorded</p>
+                      <p className="mt-5 text-xl text-white/84">{selectedCertificate.title}</p>
+                      <p className="mt-2 text-base text-white/62">{selectedCertificate.issuer}</p>
+                      <p className="mt-6 text-sm text-white/54">
+                        Screenshot preview is not available in local assets yet, but this credential is included in the latest CV.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

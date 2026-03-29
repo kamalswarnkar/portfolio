@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowDown, FileText } from "lucide-react";
 import {
   activationBanner,
+  achievements,
   certificates,
   contacts,
   education,
@@ -104,9 +105,9 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                     target="_blank"
                     rel="noreferrer"
                     onClick={(event) => event.stopPropagation()}
-                    className="ml-auto inline-flex h-16 w-16 items-center justify-center rounded-full border border-accent/50 bg-accent text-[10px] font-bold uppercase leading-tight tracking-[0.12em] text-black shadow-[0_0_28px_rgba(57,255,20,0.55)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_rgba(57,255,20,0.75)]"
+                    className="ml-auto inline-flex h-16 w-16 items-center justify-center rounded-full border border-accent/50 bg-accent text-sm font-bold uppercase leading-tight tracking-[0.12em] text-black shadow-[0_0_28px_rgba(57,255,20,0.55)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_rgba(57,255,20,0.75)]"
                   >
-                    View CV
+                    CV
                   </a>
                 </div>
               </button>
@@ -129,7 +130,7 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 170, damping: 20 }}
                 onClick={(event) => event.stopPropagation()}
-              className="panel-frame clip-corners relative max-h-[88vh] w-full max-w-6xl overflow-hidden rounded-[2rem] p-3 md:rounded-[2.4rem] md:p-6"
+                className="panel-frame clip-corners relative max-h-[88vh] w-full max-w-6xl overflow-hidden rounded-[2rem] p-3 md:rounded-[2.4rem] md:p-6"
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(57,255,20,0.22),transparent_42%),linear-gradient(145deg,rgba(57,255,20,0.12),transparent_55%,rgba(255,255,255,0.04))]" />
                 <div className="relative z-10 flex max-h-[calc(88vh-2rem)] flex-col">
@@ -144,7 +145,7 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                     </div>
                     <button
                       onClick={() => setShowResumePreview(false)}
-                    className="rounded-full border border-accent/38 bg-accent px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-black md:px-5 md:py-3 md:text-sm"
+                      className="rounded-full border border-accent/38 bg-accent px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-black md:px-5 md:py-3 md:text-sm"
                     >
                       Close
                     </button>
@@ -243,6 +244,21 @@ export const ActivationBannerSection = forwardRef<HTMLElement, { onExploreWork: 
                                 <span className="text-xs uppercase tracking-[0.18em] text-accent/72">
                                   {certificate.period}
                                 </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="rounded-[1.6rem] border border-accent/18 bg-black/30 p-5">
+                          <p className="text-sm uppercase tracking-[0.34em] text-accent/70">Achievements</p>
+                          <div className="mt-4 space-y-3">
+                            {achievements.map((achievement) => (
+                              <div
+                                key={achievement.id}
+                                className="rounded-[1rem] border border-white/10 bg-black/25 px-4 py-3"
+                              >
+                                <p className="text-base text-white/84">{achievement.title}</p>
+                                <p className="mt-1 text-sm text-white/62">{achievement.detail}</p>
                               </div>
                             ))}
                           </div>

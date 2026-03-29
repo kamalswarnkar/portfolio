@@ -235,7 +235,7 @@ function ProjectPreviewCard({ projectId }: { projectId: string }) {
     );
   }
 
-  if (projectId === "AIC-025") {
+  if (projectId === "AIC-026") {
     return (
       <div className="mt-6 rounded-[1.75rem] border border-cyan-300/18 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),rgba(0,0,0,0.92)_72%)] p-4">
         <div className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr]">

@@ -19,13 +19,15 @@ export function BackgroundSystem({
   pulseKey: number;
   phase: "idle" | "transforming" | "active";
 }) {
+  const showLiveBackground = phase !== "transforming";
+
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <AlienXField />
       <AlienMotifs active={phase !== "transforming"} />
       <OmnitrixPortal phase={phase} />
-      {phase === "active" ? <ParticleField /> : null}
-      {phase === "active" ? <GridHologram activeSection={activeSection} /> : null}
+      {showLiveBackground ? <ParticleField /> : null}
+      {showLiveBackground ? <GridHologram activeSection={activeSection} /> : null}
       <EnergyWaves phase={phase} />
       <ScanningLines />
       <motion.div

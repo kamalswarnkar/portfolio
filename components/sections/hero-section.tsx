@@ -1,91 +1,176 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState } from "react";
-import { motion, useAnimationFrame } from "framer-motion";
+import { forwardRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
 type HeroSectionProps = {
   isTransforming: boolean;
   onActivate: () => void;
 };
 
-// ── Pure-CSS animated dashed SVG ring (no re-renders) ───────────────────────
-function DashedRing({
-  radius,
-  strokeWidth,
-  dashArray,
-  className,
-  speedDeg,      // degrees/second, negative = CCW
-  isTransforming,
-}: {
-  radius: number;
-  strokeWidth: number;
-  dashArray: string;
-  className?: string;
-  speedDeg: number;
-  isTransforming: boolean;
-}) {
-  const ref = useRef<SVGSVGElement>(null);
-  const rot = useRef(0);
-
-  useAnimationFrame((_, delta) => {
-    if (!ref.current) return;
-    const speed = isTransforming ? speedDeg * 5 : speedDeg;
-    rot.current = (rot.current + speed * (delta / 1000)) % 360;
-    ref.current.style.transform = `rotate(${rot.current}deg)`;
-  });
-
-  const size = (radius + strokeWidth) * 2;
-  const cx = size / 2;
-
-  return (
-    <svg
-      ref={ref}
-      className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-visible ${className ?? ""}`}
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      aria-hidden="true"
-      style={{ willChange: "transform" }}
-    >
-      <circle
-        cx={cx}
-        cy={cx}
-        r={radius}
-        fill="none"
-        stroke="rgba(57,255,20,0.72)"
-        strokeWidth={strokeWidth}
-        strokeDasharray={dashArray}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+function roundSvg(value: number) {
+  return Number(value.toFixed(3));
 }
 
-// ── Metallic cardinal clamp ──────────────────────────────────────────────────
-function Clamp({ position }: { position: "top" | "bottom" | "left" | "right" }) {
-  const base =
-    "absolute z-20 flex items-center justify-center rounded-[0.55rem] border-2 border-[#5a5a5a]/80 bg-gradient-to-b from-[#3a3a3a] to-[#1c1c1c] shadow-[0_2px_12px_rgba(0,0,0,0.7)]";
-  const pos: Record<string, string> = {
-    top:    "left-1/2 -translate-x-1/2 top-[-2.1rem] h-[4.2rem] w-[3.4rem]",
-    bottom: "left-1/2 -translate-x-1/2 bottom-[-2.1rem] h-[4.2rem] w-[3.4rem]",
-    left:   "top-1/2 -translate-y-1/2 left-[-2.1rem] h-[3.4rem] w-[4.2rem]",
-    right:  "top-1/2 -translate-y-1/2 right-[-2.1rem] h-[3.4rem] w-[4.2rem]",
-  };
-  const isVertical = position === "top" || position === "bottom";
-  const dotStyle: Record<string, React.CSSProperties> = {
-    top:    { top: 4 },
-    bottom: { bottom: 4 },
-    left:   { left: 4 },
-    right:  { right: 4 },
-  };
-
+function OmnitrixDial({ boosted }: { boosted: boolean }) {
   return (
-    <div className={`${base} ${pos[position]}`}>
-      <div className={`rounded-sm bg-[#2a2a2a] ${isVertical ? "h-[60%] w-[35%]" : "h-[35%] w-[60%]"}`} />
-      <div
-        className="absolute h-[5px] w-[5px] rounded-full bg-red-500/70 shadow-[0_0_6px_rgba(255,60,60,0.7)]"
-        style={dotStyle[position]}
-      />
+    <div className={`omx-dial ${boosted ? "boost" : ""}`}>
+      <div className="omx-core-bloom" />
+
+      <svg viewBox="0 0 600 600" className="omx-svg" aria-hidden="true">
+        <defs>
+          <radialGradient id="omxShell" cx="42%" cy="34%" r="66%">
+            <stop offset="0%" stopColor="#3f464b" />
+            <stop offset="48%" stopColor="#191d21" />
+            <stop offset="74%" stopColor="#0b0d0f" />
+            <stop offset="100%" stopColor="#020304" />
+          </radialGradient>
+          <radialGradient id="omxInnerDark" cx="50%" cy="50%" r="64%">
+            <stop offset="0%" stopColor="#081009" />
+            <stop offset="64%" stopColor="#020302" />
+            <stop offset="100%" stopColor="#000000" />
+          </radialGradient>
+          <radialGradient id="omxCenterGlow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stopColor="#c7ff74" />
+            <stop offset="28%" stopColor="#85ff48" />
+            <stop offset="72%" stopColor="#58f129" />
+            <stop offset="100%" stopColor="#2d7d12" />
+          </radialGradient>
+          <filter id="omxSoftGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="omxNeonGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="9" result="blur1" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur2" />
+            <feMerge>
+              <feMergeNode in="blur1" />
+              <feMergeNode in="blur2" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <g className="omx-outer-ccw">
+          <circle cx="300" cy="300" r="246" fill="url(#omxShell)" />
+          <circle cx="300" cy="300" r="233" fill="none" stroke="rgba(173,181,185,0.55)" strokeWidth="5" />
+          <circle cx="300" cy="300" r="220" fill="none" stroke="rgba(82,90,96,0.82)" strokeWidth="8" />
+          <circle cx="300" cy="300" r="207" fill="none" stroke="rgba(30,36,39,0.98)" strokeWidth="10" />
+        </g>
+
+        <g className="omx-detail-ccw">
+          <circle cx="300" cy="300" r="194" fill="none" stroke="rgba(28,33,36,0.9)" strokeWidth="22" />
+          {Array.from({ length: 12 }).map((_, index) => {
+            const angle = (index * 30 * Math.PI) / 180;
+            const x = roundSvg(300 + Math.cos(angle) * 182);
+            const y = roundSvg(300 + Math.sin(angle) * 182);
+            return (
+              <rect
+                key={`outer-pill-${index}`}
+                x={x - 18}
+                y={y - 6}
+                width="36"
+                height="12"
+                rx="6"
+                fill="rgba(54,58,62,0.88)"
+                stroke="rgba(111,118,123,0.4)"
+                strokeWidth="1"
+                transform={`rotate(${index * 30} ${x} ${y})`}
+              />
+            );
+          })}
+        </g>
+
+        <circle cx="300" cy="300" r="174" fill="none" stroke="rgba(29,40,31,0.95)" strokeWidth="9" />
+
+        <g className="omx-green-cw" filter="url(#omxSoftGlow)">
+          <circle
+            cx="300"
+            cy="300"
+            r="164"
+            fill="none"
+            stroke="#69ff35"
+            strokeWidth="11"
+            strokeDasharray="38 17"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <circle cx="300" cy="300" r="148" fill="none" stroke="rgba(13,22,14,0.98)" strokeWidth="16" />
+
+        <g className="omx-ticks">
+          {Array.from({ length: 48 }).map((_, index) => {
+            const angle = (index * 7.5 * Math.PI) / 180;
+            const inner = 136;
+            const outer = index % 2 === 0 ? 146 : 142;
+            const x1 = roundSvg(300 + Math.cos(angle) * inner);
+            const y1 = roundSvg(300 + Math.sin(angle) * inner);
+            const x2 = roundSvg(300 + Math.cos(angle) * outer);
+            const y2 = roundSvg(300 + Math.sin(angle) * outer);
+            return (
+              <line
+                key={`tick-${index}`}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke="rgba(82,113,78,0.52)"
+                strokeWidth={index % 2 === 0 ? 2 : 1}
+                strokeLinecap="round"
+              />
+            );
+          })}
+        </g>
+
+        <g className="omx-green-inner-cw" filter="url(#omxSoftGlow)">
+          <circle
+            cx="300"
+            cy="300"
+            r="118"
+            fill="none"
+            stroke="#69ff35"
+            strokeWidth="8"
+            strokeDasharray="18 13"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <circle cx="300" cy="300" r="98" fill="url(#omxInnerDark)" />
+        <circle
+          cx="300"
+          cy="300"
+          r="102"
+          fill="none"
+          stroke="rgba(94,255,72,0.18)"
+          strokeWidth="6"
+          filter="url(#omxSoftGlow)"
+        />
+
+        <g className="omx-core-pulse" filter="url(#omxNeonGlow)">
+          <circle cx="300" cy="300" r="16" fill="rgba(133,255,80,0.2)" />
+          <path d="M220 156H380L323 300H277L220 156Z" fill="url(#omxCenterGlow)" />
+          <path d="M277 300H323L380 444H220L277 300Z" fill="url(#omxCenterGlow)" />
+        </g>
+
+        <g className="omx-nodes">
+          <rect x="262" y="8" width="76" height="150" rx="20" fill="#0e1215" stroke="#7f878d" strokeWidth="6" />
+          <rect x="274" y="10" width="52" height="145" rx="12" fill="#1d1d1d" />
+          <rect x="442" y="262" width="150" height="76" rx="20" fill="#0e1215" stroke="#7f878d" strokeWidth="6" />
+          <rect x="445" y="274" width="144" height="52" rx="12" fill="#1d1d1d" />
+          <rect x="262" y="442" width="76" height="150" rx="20" fill="#0e1215" stroke="#7f878d" strokeWidth="6" />
+          <rect x="274" y="445" width="52" height="144" rx="12" fill="#1d1d1d" />
+          <rect x="8" y="262" width="150" height="76" rx="20" fill="#0e1215" stroke="#7f878d" strokeWidth="6" />
+          <rect x="11" y="274" width="144" height="52" rx="12" fill="#1d1d1d" />
+
+          <circle cx="315" cy="160" r="7" fill="rgba(64,255,87,0.75)" className="omx-blink-green" />
+          <circle cx="442" cy="316" r="7" fill="rgba(255,70,70,0.8)" className="omx-blink-red" />
+          <circle cx="286" cy="442" r="7" fill="rgba(64,255,87,0.75)" className="omx-blink-green" />
+          <circle cx="158" cy="284" r="7" fill="rgba(255,70,70,0.8)" className="omx-blink-red" />
+        </g>
+      </svg>
     </div>
   );
 }
@@ -94,13 +179,13 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(function He
   { isTransforming, onActivate },
   ref,
 ) {
-  const [scanPhase, setScanPhase] = useState<"scanning" | "done">("scanning");
+  const reduceMotion = useReducedMotion();
+  const [boosted, setBoosted] = useState(false);
 
-  useEffect(() => {
-    if (isTransforming) return;
-    const t = window.setTimeout(() => setScanPhase("done"), 2200);
-    return () => window.clearTimeout(t);
-  }, [isTransforming]);
+  const triggerBoost = () => {
+    setBoosted(true);
+    window.setTimeout(() => setBoosted(false), 1300);
+  };
 
   return (
     <section
@@ -108,197 +193,35 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(function He
       ref={ref}
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-10 sm:px-6"
     >
-      {/* ── Deep space background ── */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,rgba(10,30,10,0.95),#000_75%)]" />
-      {/* subtle scanline bands */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(57,255,20,0.04) 3px,rgba(57,255,20,0.04) 4px)",
-        }}
-      />
-      {/* Floating UI debris — CSS animation, GPU only */}
-      <div className="hero-debris-1 pointer-events-none absolute top-[12%] right-[8%] h-[2.4rem] w-[2.4rem] rounded-sm border border-accent/30 bg-accent/5" />
-      <div className="hero-debris-2 pointer-events-none absolute top-[22%] right-[13%] h-[1.5rem] w-[1.5rem] rounded-sm border border-accent/20 bg-accent/5" />
-      <div className="hero-debris-3 pointer-events-none absolute top-[32%] right-[6%] h-[1.8rem] w-[1.8rem] rounded-sm border border-accent/15 bg-accent/5" />
-      {/* Orange glyph bars (CSS animation) */}
-      <div className="hero-glyph pointer-events-none absolute left-[5%] top-[35%] flex flex-col gap-[5px] opacity-35">
-        {[28, 20, 14].map((h, i) => (
-          <div key={i} className="rounded-full bg-orange-400" style={{ width: 6, height: h }} />
-        ))}
-      </div>
-
-      {/* ── Main watch + text ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.88 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{
           opacity: isTransforming ? 0 : 1,
-          scale: isTransforming ? 0.88 : 1,
-          filter: isTransforming ? "brightness(2.4)" : "brightness(1)",
+          scale: isTransforming ? 0.92 : 1,
+          filter: isTransforming ? "brightness(2.2)" : "brightness(1)",
         }}
-        transition={{ duration: isTransforming ? 0.38 : 1.1 }}
+        transition={{ duration: isTransforming ? 0.35 : 0.85 }}
         className="relative z-10 flex flex-col items-center"
       >
-        {/* ── Omnitrix clickable button ── */}
         <motion.button
-          whileHover={{ scale: 1.018 }}
-          whileTap={{ scale: 0.975 }}
-          onClick={onActivate}
+          onHoverStart={() => triggerBoost()}
+          whileHover={reduceMotion ? undefined : { scale: 1.018 }}
+          whileTap={{ scale: 0.985 }}
+          onClick={() => {
+            triggerBoost();
+            onActivate();
+          }}
           disabled={isTransforming}
           aria-label="Activate portfolio"
-          animate={{
-            scale: isTransforming ? [1, 0.95, 1.1] : 1,
-            rotate: isTransforming ? [0, -8, 0, 6, 0] : 0,
-          }}
-          transition={{ duration: 0.72, ease: "easeInOut" }}
-          className="group relative"
-          style={{ width: "clamp(16rem, 42vw, 30rem)", height: "clamp(16rem, 42vw, 30rem)" }}
+          className={`omx-button ${boosted ? "boost" : ""}`}
+          style={{ width: "clamp(18rem, 46vw, 33rem)", height: "clamp(18rem, 46vw, 33rem)" }}
         >
-          {/* Conic scan glow — CSS animation, compositor-only */}
-          <div
-            className="scan-glow-ring pointer-events-none absolute inset-[-3rem] rounded-full"
-            style={{
-              background:
-                "conic-gradient(from 0deg,transparent 0%,rgba(57,255,20,0.06) 10%,rgba(57,255,20,0.18) 20%,transparent 30%,transparent 50%,rgba(57,255,20,0.10) 70%,transparent 80%)",
-              willChange: "transform",
-            }}
-          />
-          {/* soft glow halo */}
-          <div className="absolute inset-[-1.5rem] rounded-full bg-[radial-gradient(circle,rgba(57,255,20,0.2),rgba(57,255,20,0.05)_40%,transparent_68%)] blur-xl" />
-
-          {/* Outermost dark metallic bezel */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: "radial-gradient(circle at 40% 35%, #2c2c2c, #0f0f0f 55%, #050505)",
-              boxShadow:
-                "0 0 0 3px #383838, 0 0 0 5px #111, 0 8px 48px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.06)",
-            }}
-          />
-
-          {/* 4 cardinal clamps */}
-          {(["top", "bottom", "left", "right"] as const).map((pos) => (
-            <Clamp key={pos} position={pos} />
-          ))}
-
-          {/* Outer thick dark ring */}
-          <div
-            className="absolute inset-[6%] rounded-full"
-            style={{
-              background: "radial-gradient(circle at 38% 32%, #222, #0c0c0c 62%, #060606)",
-              boxShadow: "inset 0 0 20px rgba(0,0,0,0.8), 0 0 0 2px #1a1a1a",
-            }}
-          />
-
-          {/* Animated dashed ring — outer */}
-          <DashedRing
-            radius={41}
-            strokeWidth={2.5}
-            dashArray="6 5"
-            speedDeg={22}
-            isTransforming={isTransforming}
-            className="inset-[7%]"
-          />
-
-          {/* Inner accent band */}
-          <div
-            className="absolute inset-[13%] rounded-full border-[3px] border-accent/20"
-            style={{ boxShadow: "0 0 18px rgba(57,255,20,0.12) inset" }}
-          />
-
-          {/* Animated dashed ring — inner, counter-rotate */}
-          <DashedRing
-            radius={34}
-            strokeWidth={2}
-            dashArray="4 4"
-            speedDeg={-18}
-            isTransforming={isTransforming}
-            className="inset-[16%]"
-          />
-
-          {/* Middle dark zone */}
-          <div
-            className="absolute inset-[22%] rounded-full"
-            style={{
-              background: "radial-gradient(circle at 50% 50%, rgba(16,36,16,0.9), #08080a 70%)",
-              boxShadow: "inset 0 0 28px rgba(57,255,20,0.09)",
-            }}
-          />
-
-          {/* Inner glowing green core — CSS pulse animation */}
-          <div
-            className="core-glow absolute inset-[28%] rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle at 44% 40%, rgba(140,255,90,0.82), rgba(57,255,20,0.9) 35%, rgba(20,100,10,0.7) 70%, rgba(4,16,4,0.95))",
-              willChange: "box-shadow",
-            }}
-          />
-
-          {/* Hourglass / X symbol — SVG for precise control */}
-          <div className="absolute inset-[28%] flex items-center justify-center">
-            <svg
-              viewBox="0 0 100 100"
-              className="absolute inset-0 h-full w-full"
-              aria-hidden="true"
-            >
-              {/* Hourglass shape: two triangles meeting at center */}
-              <polygon
-                points="28,18 72,18 50,50"
-                fill="black"
-              />
-              <polygon
-                points="28,82 72,82 50,50"
-                fill="black"
-              />
-              {/* slim vertical spine */}
-              <rect x="46" y="18" width="8" height="64" rx="2" fill="black" />
-            </svg>
-            {/* center white dot */}
-            <div
-              className="core-dot relative z-10 h-[12%] w-[12%] rounded-full bg-white"
-              style={{ boxShadow: "0 0 8px rgba(255,255,255,0.9)", willChange: "opacity" }}
-            />
-          </div>
-
-          {/* Hover ring */}
-          <div className="absolute inset-0 rounded-full opacity-0 ring-2 ring-accent/40 ring-offset-4 ring-offset-black transition-opacity duration-300 group-hover:opacity-100" />
+          <OmnitrixDial boosted={boosted} />
         </motion.button>
 
-        {/* ── Bottom text ── */}
         <div className="mt-10 flex flex-col items-center gap-3">
-          <motion.p
-            key={scanPhase}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: "easeOut" }}
-            className="text-center font-display text-sm uppercase tracking-[0.48em] text-accent sm:text-base md:text-lg"
-          >
-            {scanPhase === "scanning" ? "Initializing DNA Scan..." : "DNA Scan Complete"}
-          </motion.p>
-
-          {/* scanning bar */}
-          <motion.div
-            className="h-px w-44 overflow-hidden rounded-full bg-accent/20"
-            animate={{ opacity: scanPhase === "done" ? 0 : 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.div
-              className="h-full w-1/3 bg-accent/80"
-              animate={{ x: ["0%", "200%"] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: scanPhase === "done" ? 1 : 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-center text-xs uppercase tracking-[0.32em] text-white/48 sm:tracking-[0.44em] md:text-sm"
-          >
-            Tap the core to trigger transformation
-          </motion.p>
+          <p className="omx-status-main">DNA SCAN COMPLETE</p>
+          <p className="omx-status-sub">TAP THE CORE TO TRIGGER TRANSFORMATION</p>
         </div>
       </motion.div>
     </section>

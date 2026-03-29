@@ -6,41 +6,27 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { skillWatches } from "@/data/portfolio-data";
 
 export const SkillsSection = forwardRef<HTMLElement, {}>(function SkillsSection(_props, ref) {
-  const primaryWatches = skillWatches.slice(0, 3);
-  const secondaryWatches = skillWatches.slice(3);
-
   return (
     <section id="skills" ref={ref} className="scroll-mt-24 pt-8">
       <SectionHeading eyebrow="Alien DNA Selection" title="Omnitrix Skill Vault" />
 
-      <div className="mt-10 space-y-6">
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {primaryWatches.map((watch, index) => (
-            <SkillWatchCard
-              key={watch.category}
-              category={watch.category}
-              style={watch.style}
-              accent={watch.accent}
-              ringClass={watch.ringClass}
-              skills={watch.skills}
-              delay={index * 0.08}
-            />
-          ))}
-        </div>
-
-        <div className="mx-auto grid max-w-[58rem] gap-6 md:grid-cols-2 xl:max-w-[44rem]">
-          {secondaryWatches.map((watch, index) => (
-            <SkillWatchCard
-              key={watch.category}
-              category={watch.category}
-              style={watch.style}
-              accent={watch.accent}
-              ringClass={watch.ringClass}
-              skills={watch.skills}
-              delay={(primaryWatches.length + index) * 0.08}
-            />
-          ))}
-        </div>
+      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {skillWatches.map((watch, index) => (
+          <SkillWatchCard
+            key={watch.category}
+            category={watch.category}
+            style={watch.style}
+            accent={watch.accent}
+            ringClass={watch.ringClass}
+            skills={watch.skills}
+            delay={index * 0.08}
+            className={
+              skillWatches.length % 3 === 1 && index === skillWatches.length - 1
+                ? "xl:col-start-2"
+                : undefined
+            }
+          />
+        ))}
       </div>
     </section>
   );
@@ -53,6 +39,7 @@ function SkillWatchCard({
   ringClass,
   skills,
   delay,
+  className,
 }: {
   category: string;
   style: string;
@@ -60,6 +47,7 @@ function SkillWatchCard({
   ringClass: string;
   skills: string[];
   delay: number;
+  className?: string;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -77,7 +65,7 @@ function SkillWatchCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.55, delay }}
-      className="panel-frame clip-corners relative overflow-hidden rounded-[2rem] p-5 sm:p-6"
+      className={`panel-frame clip-corners relative h-full overflow-hidden rounded-[2rem] p-5 sm:p-6 ${className ?? ""}`}
     >
       <div className={`absolute inset-0 bg-gradient-to-br ${accent} opacity-70`} />
       <div className="relative z-10">

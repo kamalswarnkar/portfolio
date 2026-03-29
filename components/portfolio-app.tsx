@@ -10,13 +10,14 @@ import { EducationSection } from "@/components/sections/education-section";
 import { SkillsSection } from "@/components/sections/skills-section";
 import { ProjectsSection } from "@/components/sections/projects-section";
 import { CertificatesSection } from "@/components/sections/certificates-section";
+import { AchievementsSection } from "@/components/sections/achievements-section";
 import { ContactSection } from "@/components/sections/contact-section";
 import { BackgroundSystem } from "@/components/background/background-system";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { OmnitrixNav } from "@/components/ui/omnitrix-nav";
 import { TransformationSequence } from "@/components/ui/transformation-sequence";
 import { type SectionId } from "@/lib/site-config";
-import { useActivationSound } from "@/hooks/use-activation-sound";
+import { ACTIVATION_SOUND_CLIP_MS, useActivationSound } from "@/hooks/use-activation-sound";
 
 export function PortfolioApp() {
   const [phase, setPhase] = useState<"idle" | "transforming" | "active">("idle");
@@ -28,6 +29,7 @@ export function PortfolioApp() {
     banner: null,
     about: null,
     training: null,
+    achievements: null,
     education: null,
     skills: null,
     projects: null,
@@ -75,7 +77,7 @@ export function PortfolioApp() {
       requestAnimationFrame(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
-    }, 2650);
+    }, ACTIVATION_SOUND_CLIP_MS);
   };
 
   const scrollToSection = (sectionId: SectionId) => {
@@ -93,7 +95,9 @@ export function PortfolioApp() {
       <CustomCursor />
 
       <AnimatePresence>
-        {phase === "transforming" ? <TransformationSequence key="transform" /> : null}
+        {phase === "transforming" ? (
+          <TransformationSequence key="transform" duration={ACTIVATION_SOUND_CLIP_MS / 1000} />
+        ) : null}
       </AnimatePresence>
 
       <div className="relative z-10">
@@ -107,6 +111,7 @@ export function PortfolioApp() {
                 { id: "skills", label: "Skills" },
                 { id: "projects", label: "Work" },
                 { id: "certificates", label: "Proof" },
+                { id: "achievements", label: "Wins" },
                 { id: "training", label: "Train" },
                 { id: "contact", label: "Contact" },
               ]}
@@ -122,7 +127,7 @@ export function PortfolioApp() {
               key="hero"
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
             >
               <HeroSection
                 ref={(node) => {
@@ -142,7 +147,7 @@ export function PortfolioApp() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.7, delay: 0.08 }}
+              transition={{ duration: 0.95, delay: 0.14, ease: "easeOut" }}
               className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-3 pb-20 pt-6 sm:gap-8 sm:px-6 sm:pt-8 lg:px-8"
             >
               <ActivationBannerSection
@@ -175,6 +180,11 @@ export function PortfolioApp() {
               <CertificatesSection
                 ref={(node) => {
                   sectionRefs.current.certificates = node;
+                }}
+              />
+              <AchievementsSection
+                ref={(node) => {
+                  sectionRefs.current.achievements = node;
                 }}
               />
               <TrainingSection

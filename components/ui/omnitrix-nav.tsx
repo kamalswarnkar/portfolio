@@ -9,16 +9,21 @@ type NavItem = {
   label: string;
 };
 
-const desktopSlots = [
-  { x: 0, y: -122 },
-  { x: 86, y: -86 },
-  { x: 122, y: 0 },
-  { x: 86, y: 86 },
-  { x: 0, y: 122 },
-  { x: -86, y: 86 },
-  { x: -122, y: 0 },
-  { x: -86, y: -86 },
-];
+const DIAL_SOUND_SRC = "/assets/voicy_dial_turning.mp3";
+const DIAL_SOUND_CLIP_MS = 1000;
+
+let dialAudio: HTMLAudioElement | null = null;
+let dialStopTimer: number | null = null;
+
+function getDesktopSlot(index: number, total: number) {
+  const radius = total > 8 ? 102 : 114;
+  const angleDeg = -90 + index * (360 / total);
+  const angleRad = (angleDeg * Math.PI) / 180;
+  return {
+    x: Math.cos(angleRad) * radius,
+    y: Math.sin(angleRad) * radius,
+  };
+}
 
 export function OmnitrixNav({
   items,
@@ -33,6 +38,40 @@ export function OmnitrixNav({
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
+  const playDialSound = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!dialAudio) {
+      dialAudio = new Audio(DIAL_SOUND_SRC);
+      dialAudio.preload = "auto";
+    }
+
+    if (dialStopTimer) {
+      window.clearTimeout(dialStopTimer);
+      dialStopTimer = null;
+    }
+
+    dialAudio.pause();
+    dialAudio.currentTime = 0;
+    dialAudio.volume = 0.72;
+
+    void dialAudio.play().catch(() => {
+      // Ignore playback errors from repeated rapid toggles.
+    });
+
+    dialStopTimer = window.setTimeout(() => {
+      if (!dialAudio) {
+        return;
+      }
+
+      dialAudio.pause();
+      dialAudio.currentTime = 0;
+      dialStopTimer = null;
+    }, DIAL_SOUND_CLIP_MS);
+  };
 
   const handleDragEnd = () => {
     if (!anchorRef.current) {
@@ -81,8 +120,8 @@ export function OmnitrixNav({
                 <div className="absolute inset-5 rounded-full border border-accent/25" />
                 <div className="absolute inset-[4.5rem] rounded-full border border-accent/20" />
 
-                {items.slice(0, desktopSlots.length).map((item, index) => {
-                  const slot = desktopSlots[index];
+                {items.map((item, index) => {
+                  const slot = getDesktopSlot(index, items.length);
                   const isActive = activeSection === item.id;
 
                   return (
@@ -95,8 +134,8 @@ export function OmnitrixNav({
                           : "border-accent/30 bg-black/75 text-white/78 hover:bg-accent/15 hover:text-accent"
                       }`}
                       style={{
-                        left: `calc(50% + ${slot.x}px)`,
-                        top: `calc(50% + ${slot.y}px)`,
+                        left: `calc(50% + ${slot.x.toFixed(1)}px)`,
+                        top: `calc(50% + ${slot.y.toFixed(1)}px)`,
                       }}
                     >
                       <span className="max-w-[3.5rem] text-center leading-tight">{item.label}</span>
@@ -109,7 +148,10 @@ export function OmnitrixNav({
         </AnimatePresence>
 
         <button
-          onClick={() => setIsOpen((current) => !current)}
+          onClick={() => {
+            playDialSound();
+            setIsOpen((current) => !current);
+          }}
           className={`absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-accent/40 bg-accent/10 transition ${
             isOpen ? "h-24 w-24 rounded-full" : "h-20 w-20 rounded-[1.8rem] shadow-[0_0_36px_rgba(57,255,20,0.22)]"
           }`}

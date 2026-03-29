@@ -34,6 +34,7 @@ body {
 }
 
 @media (min-width: 769px) {
+
   html,
   body,
   body *,
@@ -57,7 +58,6 @@ body {
     cursor: auto;
   }
 
-  /* Disable hover-only spotlight — can't be triggered on touch */
   .omnitrix-spotlight:hover .omnitrix-text-cover,
   .omnitrix-spotlight:hover .omnitrix-hidden-text {
     opacity: 0;
@@ -73,7 +73,6 @@ a {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
-  /* Remove 300ms tap delay on mobile */
   touch-action: manipulation;
 }
 
@@ -110,14 +109,12 @@ a {
 .omnitrix-ring {
   background:
     radial-gradient(circle, rgba(57, 255, 20, 0.18) 0%, rgba(57, 255, 20, 0) 55%),
-    conic-gradient(
-      from 0deg,
+    conic-gradient(from 0deg,
       rgba(57, 255, 20, 0.08),
       rgba(57, 255, 20, 0.52),
       rgba(57, 255, 20, 0.08),
       rgba(57, 255, 20, 0.52),
-      rgba(57, 255, 20, 0.08)
-    );
+      rgba(57, 255, 20, 0.08));
 }
 
 .grid-mask {
@@ -148,6 +145,7 @@ a {
   from {
     transform: translateY(0);
   }
+
   to {
     transform: translateY(240%);
   }
@@ -157,56 +155,109 @@ a {
   from {
     transform: translateX(-20%);
   }
+
   to {
     transform: translateX(20%);
   }
 }
 
-/* ── Hero section CSS animations (replaces Framer repeat:Infinity) ── */
-@keyframes core-glow-pulse {
-  0%, 100% { box-shadow: 0 0 30px rgba(57,255,20,0.45), inset 0 0 16px rgba(57,255,20,0.22); }
-  50%       { box-shadow: 0 0 50px rgba(57,255,20,0.6),  inset 0 0 24px rgba(57,255,20,0.32); }
-}
-
-@keyframes core-dot-blink {
-  0%, 100% { opacity: 0.8; }
-  50%       { opacity: 1;   }
-}
-
+/* Hero section CSS animations */
 @keyframes scan-glow-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes debris-float {
-  0%, 100% { opacity: 0.18; }
-  50%       { opacity: 0.42; }
+@keyframes hero-star-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.95;
+  }
 }
 
-@keyframes glyph-pulse {
-  0%, 100% { opacity: 0.25; }
-  50%       { opacity: 0.45; }
+@keyframes hero-beam-pulse {
+
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
-.core-glow     { animation: core-glow-pulse 2.4s ease-in-out infinite; }
-.core-dot      { animation: core-dot-blink   1.2s ease-in-out infinite; }
-.scan-glow-ring { animation: scan-glow-spin  12s linear infinite; }
-.hero-debris-1  { animation: debris-float      3s ease-in-out infinite; }
-.hero-debris-2  { animation: debris-float     4s ease-in-out infinite 0.5s; }
-.hero-debris-3  { animation: debris-float      5s ease-in-out infinite 1s; }
-.hero-glyph     { animation: glyph-pulse      3.5s ease-in-out infinite; }
+@keyframes core-shell-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 26px rgba(57, 255, 20, 0.32);
+  }
+
+  50% {
+    box-shadow: 0 0 52px rgba(57, 255, 20, 0.52);
+  }
+}
+
+.scan-glow-ring {
+  animation: scan-glow-spin 12s linear infinite;
+}
+
+.hero-star {
+  animation: hero-star-pulse 3.2s ease-in-out infinite;
+}
+
+.hero-vbeam-1 {
+  animation: hero-beam-pulse 3.8s ease-in-out infinite;
+}
+
+.hero-vbeam-2 {
+  animation: hero-beam-pulse 4.4s ease-in-out infinite 0.4s;
+}
+
+.hero-vbeam-3 {
+  animation: hero-beam-pulse 4.9s ease-in-out infinite 0.8s;
+}
+
+.hero-vbeam-4 {
+  animation: hero-beam-pulse 5.3s ease-in-out infinite 1.1s;
+}
+
+.core-shell {
+  animation: core-shell-pulse 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .scan-glow-ring,
+  .hero-star,
+  .hero-vbeam-1,
+  .hero-vbeam-2,
+  .hero-vbeam-3,
+  .hero-vbeam-4,
+  .core-shell {
+    animation: none !important;
+  }
+}
 
 .omnitrix-spotlight::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(
-      circle 210px at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    radial-gradient(circle 210px at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
       rgba(57, 255, 20, 0.28),
       rgba(57, 255, 20, 0.08) 45%,
-      transparent 68%
-    );
+      transparent 68%);
   pointer-events: none;
 }
 
@@ -215,12 +266,10 @@ a {
   transition: opacity 0.16s ease;
   clip-path: circle(0 at var(--spotlight-x, 50%) var(--spotlight-y, 50%));
   background:
-    radial-gradient(
-      circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    radial-gradient(circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
       rgba(10, 18, 11, 0.98) 0,
       rgba(8, 14, 9, 0.98) 62%,
-      rgba(6, 10, 7, 0.96) 100%
-    );
+      rgba(6, 10, 7, 0.96) 100%);
 }
 
 .omnitrix-hidden-text {
@@ -239,4 +288,1415 @@ a {
 .omnitrix-spotlight:hover .omnitrix-hidden-text {
   opacity: 1;
   clip-path: circle(220px at var(--spotlight-x, 50%) var(--spotlight-y, 50%));
+}
+
+/* Omnitrix Hero Rebuild */
+.omni-hero {
+  background: #020705;
+}
+
+.omni-bg-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 65% 76%, rgba(34, 255, 80, 0.18), rgba(0, 0, 0, 0) 34%),
+    radial-gradient(circle at 50% 45%, rgba(20, 50, 21, 0.6), rgba(0, 0, 0, 0) 45%),
+    linear-gradient(180deg, #01070a 0%, #03100d 50%, #000 100%);
+}
+
+.omni-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.omni-vertical-beams {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.omni-vertical-beams .beam {
+  position: absolute;
+  top: -10%;
+  height: 120%;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(57, 255, 20, 0.35), transparent);
+  filter: blur(0.5px);
+  animation: omniBeamPulse 6s ease-in-out infinite;
+}
+
+.beam-1 {
+  left: 10%;
+  animation-delay: 0.2s;
+}
+
+.beam-2 {
+  left: 27%;
+  animation-delay: 1.1s;
+}
+
+.beam-3 {
+  left: 52%;
+  animation-delay: 0.5s;
+}
+
+.beam-4 {
+  left: 72%;
+  animation-delay: 1.6s;
+}
+
+.beam-5 {
+  left: 90%;
+  animation-delay: 0.9s;
+}
+
+.omni-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.omni-star {
+  position: absolute;
+  background: rgba(235, 255, 240, 0.9);
+  border-radius: 999px;
+  box-shadow: 0 0 6px rgba(190, 255, 210, 0.6);
+  animation: omniStarTwinkle 4s ease-in-out infinite;
+}
+
+.omni-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.omni-particle {
+  position: absolute;
+  bottom: -8%;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(70, 255, 110, 0.55);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+  animation-name: omniParticleFloat;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.omni-left-glyph {
+  position: absolute;
+  left: 5%;
+  top: 36%;
+  display: flex;
+  gap: 10px;
+  opacity: 0.6;
+}
+
+.omni-left-glyph span {
+  width: 20px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 190, 90, 0.95), rgba(255, 90, 20, 0.25));
+  box-shadow: 0 0 16px rgba(255, 170, 60, 0.5);
+}
+
+.omni-left-glyph span:nth-child(1) {
+  height: 50px;
+}
+
+.omni-left-glyph span:nth-child(2) {
+  height: 60px;
+}
+
+.omni-left-glyph span:nth-child(3) {
+  height: 50px;
+}
+
+.omni-right-squares {
+  position: absolute;
+  right: 8%;
+  top: 22%;
+  display: grid;
+  gap: 16px;
+}
+
+.omni-right-squares span {
+  width: 70px;
+  height: 70px;
+  border: 1px solid rgba(230, 255, 235, 0.2);
+  background: linear-gradient(180deg, rgba(200, 255, 220, 0.06), rgba(50, 80, 70, 0.03));
+}
+
+.omni-radar {
+  position: absolute;
+  right: -110px;
+  bottom: -150px;
+  width: 520px;
+  height: 520px;
+  pointer-events: none;
+}
+
+.omni-radar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(180, 255, 200, 0.2);
+  background: radial-gradient(circle at center, rgba(57, 255, 20, 0.24), rgba(57, 255, 20, 0.02) 50%, transparent 70%);
+}
+
+.omni-radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, rgba(57, 255, 20, 0.7), rgba(57, 255, 20, 0.15) 12%, transparent 45%);
+  mask: radial-gradient(circle at center, transparent 44%, #000 46%, #000 74%, transparent 76%);
+  -webkit-mask: radial-gradient(circle at center, transparent 44%, #000 46%, #000 74%, transparent 76%);
+  animation: omniRadarSpin 8s linear infinite;
+  filter: blur(0.6px);
+}
+
+.omni-button {
+  position: relative;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.omni-watch-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 45% 35%, #30373d 0%, #11161b 58%, #07090b 78%),
+    radial-gradient(circle at center, rgba(57, 255, 20, 0.08), transparent 50%);
+  box-shadow:
+    0 0 0 3px rgba(100, 116, 120, 0.45),
+    0 0 0 6px rgba(20, 24, 27, 0.95),
+    0 20px 60px rgba(0, 0, 0, 0.65);
+}
+
+.omni-rings {
+  position: absolute;
+  inset: 0;
+}
+
+.omni-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
+.omni-ring.outer-outline {
+  width: 86%;
+  height: 86%;
+  border: 2px solid rgba(210, 220, 230, 0.36);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
+  animation: omniRingCCW 16s linear infinite;
+}
+
+.omni-ring.detail-ticks {
+  width: 76%;
+  height: 76%;
+  border: 1px solid rgba(130, 145, 150, 0.45);
+}
+
+.omni-ring.detail-ticks::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: repeating-conic-gradient(from 0deg,
+      rgba(145, 160, 165, 0.3) 0deg 3deg,
+      transparent 3deg 15deg);
+  mask: radial-gradient(circle, transparent 70%, #000 71%, #000 80%, transparent 81%);
+  -webkit-mask: radial-gradient(circle, transparent 70%, #000 71%, #000 80%, transparent 81%);
+}
+
+.omni-ring.middle-dashed {
+  width: 66%;
+  height: 66%;
+  background: repeating-conic-gradient(from 0deg,
+      rgba(95, 255, 78, 0.95) 0deg 7deg,
+      transparent 7deg 15deg);
+  box-shadow: 0 0 18px rgba(57, 255, 20, 0.6);
+  mask: radial-gradient(circle, transparent 72%, #000 74%, #000 84%, transparent 86%);
+  -webkit-mask: radial-gradient(circle, transparent 72%, #000 74%, #000 84%, transparent 86%);
+  animation: omniRingCW 7s linear infinite;
+}
+
+.omni-ring.inner-solid {
+  width: 55%;
+  height: 55%;
+  border: 2px solid rgba(90, 255, 70, 0.9);
+  box-shadow: 0 0 28px rgba(57, 255, 20, 0.55), inset 0 0 20px rgba(57, 255, 20, 0.22);
+  animation: omniInnerPulse 2.6s ease-in-out infinite;
+}
+
+.omni-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44%;
+  height: 44%;
+  transform: translate(-50%, -50%);
+}
+
+.omni-core-bloom {
+  position: absolute;
+  inset: -18%;
+  border-radius: 999px;
+  background: radial-gradient(circle at center, rgba(132, 255, 95, 0.55), rgba(57, 255, 20, 0.12) 52%, transparent 72%);
+  filter: blur(5px);
+}
+
+.omni-core-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(circle at center, #041007 0%, #020603 74%);
+  border: 2px solid rgba(95, 255, 78, 0.34);
+  box-shadow: 0 0 35px rgba(57, 255, 20, 0.55), inset 0 0 35px rgba(57, 255, 20, 0.2);
+  animation: omniCoreBreathe 2.4s ease-in-out infinite;
+}
+
+.omni-hourglass {
+  position: absolute;
+  inset: 16%;
+  fill: #68ff3d;
+  filter: drop-shadow(0 0 8px rgba(95, 255, 78, 0.8));
+}
+
+.omni-module {
+  position: absolute;
+  z-index: 20;
+  border: 2px solid rgba(110, 120, 126, 0.8);
+  background: linear-gradient(180deg, #394246 0%, #1a1f24 58%, #0e1318 100%);
+  box-shadow: inset 0 0 0 1px rgba(220, 230, 235, 0.1), 0 8px 16px rgba(0, 0, 0, 0.5);
+  border-radius: 14px;
+  animation: omniModuleFloat 3.8s ease-in-out infinite;
+}
+
+.omni-module-top,
+.omni-module-bottom {
+  width: 70px;
+  height: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.omni-module-left,
+.omni-module-right {
+  width: 86px;
+  height: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.omni-module-top {
+  top: -44px;
+}
+
+.omni-module-right {
+  right: -44px;
+  animation-delay: 0.45s;
+}
+
+.omni-module-bottom {
+  bottom: -44px;
+  animation-delay: 0.75s;
+}
+
+.omni-module-left {
+  left: -44px;
+  animation-delay: 0.3s;
+}
+
+.omni-module-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40%;
+  height: 40%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  background: rgba(12, 20, 24, 0.9);
+  border: 1px solid rgba(220, 230, 235, 0.2);
+}
+
+.omni-module-indicator {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.omni-module-indicator.green {
+  right: 8px;
+  top: 8px;
+  background: #44ff58;
+  box-shadow: 0 0 8px rgba(68, 255, 88, 0.8);
+  animation: omniBlinkGreen 1.3s linear infinite;
+}
+
+.omni-module-indicator.red {
+  right: 8px;
+  top: 20px;
+  background: #ff4a4a;
+  box-shadow: 0 0 8px rgba(255, 74, 74, 0.8);
+  animation: omniBlinkRed 1.8s linear infinite;
+}
+
+.omni-button.boost .omni-core-disc {
+  animation-duration: 0.9s;
+  box-shadow: 0 0 55px rgba(57, 255, 20, 0.85), inset 0 0 35px rgba(57, 255, 20, 0.32);
+}
+
+.omni-button.boost .omni-ring.middle-dashed {
+  animation-duration: 2.1s;
+}
+
+.omni-button.boost .omni-ring.outer-outline {
+  animation-duration: 6s;
+}
+
+.omni-button.boost .omni-core-bloom {
+  filter: blur(9px);
+}
+
+.omni-status-text {
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.55em;
+  color: #90ff6f;
+  font-size: clamp(0.75rem, 1.5vw, 1.2rem);
+  text-shadow: 0 0 18px rgba(57, 255, 20, 0.7);
+  animation: omniFlicker 2.8s linear infinite;
+}
+
+.omni-status-sub {
+  text-transform: uppercase;
+  letter-spacing: 0.45em;
+  color: rgba(230, 245, 230, 0.58);
+  font-size: clamp(0.62rem, 1.1vw, 0.95rem);
+}
+
+@keyframes omniRingCW {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes omniRingCCW {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes omniInnerPulse {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.95;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes omniCoreBreathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.035);
+  }
+}
+
+@keyframes omniRadarSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes omniStarTwinkle {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes omniParticleFloat {
+  from {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.8;
+  }
+
+  90% {
+    opacity: 0.2;
+  }
+
+  to {
+    transform: translateY(-110vh) translateX(24px);
+    opacity: 0;
+  }
+}
+
+@keyframes omniBeamPulse {
+
+  0%,
+  100% {
+    opacity: 0.16;
+  }
+
+  50% {
+    opacity: 0.46;
+  }
+}
+
+@keyframes omniModuleFloat {
+
+  0%,
+  100% {
+    transform: translateY(-50%);
+  }
+
+  50% {
+    transform: translateY(calc(-50% - 3px));
+  }
+}
+
+.omni-module-top,
+.omni-module-bottom {
+  animation-name: omniModuleFloatY;
+}
+
+@keyframes omniModuleFloatY {
+
+  0%,
+  100% {
+    transform: translateX(-50%);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-3px);
+  }
+}
+
+@keyframes omniBlinkGreen {
+
+  0%,
+  45%,
+  100% {
+    opacity: 0.25;
+  }
+
+  50%,
+  85% {
+    opacity: 1;
+  }
+}
+
+@keyframes omniBlinkRed {
+
+  0%,
+  68%,
+  100% {
+    opacity: 0.2;
+  }
+
+  72%,
+  80% {
+    opacity: 1;
+  }
+}
+
+@keyframes omniFlicker {
+
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+
+  10% {
+    opacity: 0.68;
+  }
+
+  13% {
+    opacity: 0.92;
+  }
+
+  37% {
+    opacity: 0.72;
+  }
+
+  42% {
+    opacity: 1;
+  }
+
+  76% {
+    opacity: 0.83;
+  }
+}
+
+@media (max-width: 768px) {
+  .omni-radar {
+    width: 340px;
+    height: 340px;
+    right: -72px;
+    bottom: -96px;
+  }
+
+  .omni-right-squares span {
+    width: 48px;
+    height: 48px;
+  }
+
+  .omni-status-text {
+    letter-spacing: 0.28em;
+  }
+
+  .omni-status-sub {
+    letter-spacing: 0.2em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .omni-star,
+  .omni-particle,
+  .omni-radar-sweep,
+  .omni-ring.outer-outline,
+  .omni-ring.middle-dashed,
+  .omni-ring.inner-solid,
+  .omni-core-disc,
+  .omni-module,
+  .omni-status-text,
+  .omni-vertical-beams .beam,
+  .omni-module-indicator {
+    animation: none !important;
+  }
+}
+
+/* Exact-style Omnitrix Rebuild */
+.rx-hero {
+  background: #000;
+}
+
+.rx-bg-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 78%, rgba(32, 255, 74, 0.24), transparent 34%),
+    radial-gradient(circle at 50% 44%, rgba(8, 34, 14, 0.8), transparent 40%),
+    linear-gradient(180deg, #01060a 0%, #04120e 50%, #000 100%);
+}
+
+.rx-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 46%, rgba(0, 0, 0, 0.82) 100%);
+}
+
+.rx-bg-beams {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rx-beam {
+  position: absolute;
+  top: -14%;
+  height: 128%;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(57, 255, 20, 0.32), transparent);
+  filter: blur(0.4px);
+  animation: rxBeam 6s ease-in-out infinite;
+}
+
+.rx-beam.b1 { left: 7%; animation-delay: 0.2s; }
+.rx-beam.b2 { left: 21%; animation-delay: 1.1s; }
+.rx-beam.b3 { left: 42%; animation-delay: 0.5s; }
+.rx-beam.b4 { left: 63%; animation-delay: 1.8s; }
+.rx-beam.b5 { left: 84%; animation-delay: 0.9s; }
+
+.rx-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rx-star {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(238, 255, 245, 0.88);
+  box-shadow: 0 0 7px rgba(198, 255, 210, 0.62);
+  animation: rxTwinkle 3.8s ease-in-out infinite;
+}
+
+.rx-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rx-particle {
+  position: absolute;
+  bottom: -8%;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(70, 255, 96, 0.64);
+  box-shadow: 0 0 9px rgba(57, 255, 20, 0.5);
+  animation-name: rxParticle;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.rx-left-bars {
+  position: absolute;
+  left: 4%;
+  top: 34%;
+  display: flex;
+  gap: 8px;
+  opacity: 0.62;
+}
+
+.rx-left-bars span {
+  width: 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 188, 92, 0.95), rgba(255, 84, 20, 0.24));
+  box-shadow: 0 0 16px rgba(255, 164, 55, 0.52);
+}
+
+.rx-left-bars span:nth-child(1),
+.rx-left-bars span:nth-child(3) { height: 52px; }
+.rx-left-bars span:nth-child(2) { height: 62px; }
+
+.rx-right-squares {
+  position: absolute;
+  right: 7%;
+  top: 20%;
+  display: grid;
+  gap: 14px;
+}
+
+.rx-right-squares span {
+  width: 68px;
+  height: 68px;
+  border: 1px solid rgba(210, 255, 220, 0.16);
+  background: linear-gradient(180deg, rgba(220, 255, 230, 0.07), rgba(90, 120, 100, 0.02));
+}
+
+.rx-radar {
+  position: absolute;
+  right: -102px;
+  bottom: -150px;
+  width: 530px;
+  height: 530px;
+  pointer-events: none;
+}
+
+.rx-radar-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 255, 205, 0.2);
+  background: radial-gradient(circle at center, rgba(57, 255, 20, 0.26), rgba(57, 255, 20, 0.04) 48%, transparent 70%);
+}
+
+.rx-radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, rgba(57, 255, 20, 0.72), rgba(57, 255, 20, 0.14) 12%, transparent 44%);
+  mask: radial-gradient(circle, transparent 42%, #000 45%, #000 75%, transparent 78%);
+  -webkit-mask: radial-gradient(circle, transparent 42%, #000 45%, #000 75%, transparent 78%);
+  animation: rxRadar 8s linear infinite;
+  filter: blur(0.6px);
+}
+
+.rx-button {
+  position: relative;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rx-watch-body {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 42% 34%, #2f3539 0%, #151a1e 58%, #07090b 78%),
+    radial-gradient(circle at center, rgba(57, 255, 20, 0.08), transparent 50%);
+  box-shadow:
+    0 0 0 3px rgba(100, 110, 116, 0.45),
+    0 0 0 7px rgba(18, 22, 25, 0.95),
+    inset 0 0 24px rgba(0, 0, 0, 0.8),
+    0 18px 50px rgba(0, 0, 0, 0.68);
+}
+
+.rx-rings {
+  position: absolute;
+  inset: 0;
+}
+
+.rx-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
+.rx-ring.r-outline-1 {
+  width: 89%;
+  height: 89%;
+  border: 2px solid rgba(189, 203, 208, 0.45);
+  animation: rxCCW 18s linear infinite;
+}
+
+.rx-ring.r-outline-2 {
+  width: 82%;
+  height: 82%;
+  border: 1px solid rgba(134, 146, 152, 0.46);
+}
+
+.rx-ring.r-detail-ticks {
+  width: 76%;
+  height: 76%;
+  border: 1px solid rgba(120, 134, 142, 0.42);
+}
+
+.rx-ring.r-detail-ticks::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: repeating-conic-gradient(from 0deg, rgba(150, 170, 178, 0.36) 0deg 3deg, transparent 3deg 15deg);
+  mask: radial-gradient(circle, transparent 72%, #000 74%, #000 82%, transparent 84%);
+  -webkit-mask: radial-gradient(circle, transparent 72%, #000 74%, #000 82%, transparent 84%);
+}
+
+.rx-ring.r-dashed-outer {
+  width: 67%;
+  height: 67%;
+  background: repeating-conic-gradient(from 0deg, rgba(95, 255, 78, 0.95) 0deg 6.8deg, transparent 6.8deg 14.6deg);
+  box-shadow: 0 0 18px rgba(57, 255, 20, 0.62);
+  mask: radial-gradient(circle, transparent 71%, #000 73%, #000 84%, transparent 86%);
+  -webkit-mask: radial-gradient(circle, transparent 71%, #000 73%, #000 84%, transparent 86%);
+  animation: rxCW 7s linear infinite;
+}
+
+.rx-ring.r-dashed-inner {
+  width: 56%;
+  height: 56%;
+  background: repeating-conic-gradient(from 0deg, rgba(95, 255, 78, 0.86) 0deg 5.5deg, transparent 5.5deg 13deg);
+  box-shadow: 0 0 16px rgba(57, 255, 20, 0.56);
+  mask: radial-gradient(circle, transparent 70%, #000 73%, #000 84%, transparent 87%);
+  -webkit-mask: radial-gradient(circle, transparent 70%, #000 73%, #000 84%, transparent 87%);
+  animation: rxCW 5.3s linear infinite;
+}
+
+.rx-ring.r-solid-core {
+  width: 48%;
+  height: 48%;
+  border: 2px solid rgba(106, 255, 85, 0.9);
+  box-shadow: 0 0 28px rgba(57, 255, 20, 0.56), inset 0 0 22px rgba(57, 255, 20, 0.22);
+  animation: rxPulseRing 2.6s ease-in-out infinite;
+}
+
+.rx-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 43%;
+  height: 43%;
+  transform: translate(-50%, -50%);
+}
+
+.rx-core-bloom {
+  position: absolute;
+  inset: -20%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(140, 255, 92, 0.62), rgba(57, 255, 20, 0.15) 52%, transparent 74%);
+  filter: blur(6px);
+}
+
+.rx-core-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(circle, #040d06 0%, #010401 74%);
+  border: 2px solid rgba(104, 255, 76, 0.35);
+  box-shadow: 0 0 42px rgba(57, 255, 20, 0.58), inset 0 0 34px rgba(57, 255, 20, 0.2);
+  animation: rxCoreBreath 2.5s ease-in-out infinite;
+}
+
+.rx-hourglass {
+  position: absolute;
+  inset: 14%;
+  fill: #66ff3f;
+  filter: drop-shadow(0 0 10px rgba(92, 255, 74, 0.84));
+}
+
+.rx-node {
+  position: absolute;
+  z-index: 20;
+  border: 2px solid rgba(102, 112, 120, 0.82);
+  background: linear-gradient(180deg, #3a4348 0%, #1c2126 58%, #0e1318 100%);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(218, 230, 235, 0.12), 0 8px 16px rgba(0, 0, 0, 0.58);
+}
+
+.rx-node-top,
+.rx-node-bottom {
+  width: 70px;
+  height: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: rxNodeFloatY 3.8s ease-in-out infinite;
+}
+
+.rx-node-left,
+.rx-node-right {
+  width: 88px;
+  height: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: rxNodeFloatX 3.8s ease-in-out infinite;
+}
+
+.rx-node-top { top: -46px; }
+.rx-node-bottom { bottom: -46px; animation-delay: 0.7s; }
+.rx-node-left { left: -46px; animation-delay: 0.35s; }
+.rx-node-right { right: -46px; animation-delay: 0.52s; }
+
+.rx-node-inner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40%;
+  height: 40%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  background: rgba(12, 20, 24, 0.92);
+  border: 1px solid rgba(210, 230, 236, 0.2);
+}
+
+.rx-node-dot {
+  position: absolute;
+  right: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.rx-node-dot.green {
+  top: 8px;
+  background: #45ff58;
+  box-shadow: 0 0 8px rgba(69, 255, 88, 0.84);
+  animation: rxBlinkG 1.25s linear infinite;
+}
+
+.rx-node-dot.red {
+  top: 20px;
+  background: #ff4c4c;
+  box-shadow: 0 0 8px rgba(255, 76, 76, 0.84);
+  animation: rxBlinkR 1.9s linear infinite;
+}
+
+.rx-button.boost .rx-core-disc {
+  animation-duration: 0.95s;
+  box-shadow: 0 0 62px rgba(57, 255, 20, 0.9), inset 0 0 40px rgba(57, 255, 20, 0.32);
+}
+
+.rx-button.boost .rx-ring.r-dashed-outer { animation-duration: 2.1s; }
+.rx-button.boost .rx-ring.r-dashed-inner { animation-duration: 1.8s; }
+.rx-button.boost .rx-ring.r-outline-1 { animation-duration: 6.5s; }
+
+.rx-status-main {
+  font-family: var(--font-display), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.55em;
+  color: #95ff72;
+  font-size: clamp(0.75rem, 1.45vw, 1.18rem);
+  text-shadow: 0 0 18px rgba(57, 255, 20, 0.72);
+  animation: rxFlicker 2.8s linear infinite;
+}
+
+.rx-status-sub {
+  text-transform: uppercase;
+  letter-spacing: 0.44em;
+  color: rgba(233, 246, 233, 0.56);
+  font-size: clamp(0.62rem, 1.06vw, 0.94rem);
+}
+
+@keyframes rxCW {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rxCCW {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes rxPulseRing {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.95; }
+  50% { transform: translate(-50%, -50%) scale(1.04); opacity: 1; }
+}
+
+@keyframes rxCoreBreath {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@keyframes rxTwinkle {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes rxParticle {
+  from { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.2; }
+  to { transform: translateY(-110vh) translateX(24px); opacity: 0; }
+}
+
+@keyframes rxBeam {
+  0%, 100% { opacity: 0.16; }
+  50% { opacity: 0.46; }
+}
+
+@keyframes rxRadar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rxNodeFloatY {
+  0%, 100% { transform: translateX(-50%); }
+  50% { transform: translateX(-50%) translateY(-3px); }
+}
+
+@keyframes rxNodeFloatX {
+  0%, 100% { transform: translateY(-50%); }
+  50% { transform: translateY(-50%) translateX(3px); }
+}
+
+@keyframes rxBlinkG {
+  0%, 45%, 100% { opacity: 0.25; }
+  50%, 85% { opacity: 1; }
+}
+
+@keyframes rxBlinkR {
+  0%, 68%, 100% { opacity: 0.2; }
+  72%, 80% { opacity: 1; }
+}
+
+@keyframes rxFlicker {
+  0%, 100% { opacity: 0.95; }
+  10% { opacity: 0.68; }
+  13% { opacity: 0.92; }
+  37% { opacity: 0.72; }
+  42% { opacity: 1; }
+  76% { opacity: 0.83; }
+}
+
+@media (max-width: 768px) {
+  .rx-radar {
+    width: 360px;
+    height: 360px;
+    right: -75px;
+    bottom: -102px;
+  }
+
+  .rx-right-squares span {
+    width: 48px;
+    height: 48px;
+  }
+
+  .rx-status-main { letter-spacing: 0.28em; }
+  .rx-status-sub { letter-spacing: 0.2em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rx-star,
+  .rx-particle,
+  .rx-radar-sweep,
+  .rx-ring,
+  .rx-core-disc,
+  .rx-node,
+  .rx-status-main,
+  .rx-beam,
+  .rx-node-dot {
+    animation: none !important;
+  }
+}
+
+/* Omnitrix Exact Pass */
+.omx-bg-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 72% 80%, rgba(33, 255, 72, 0.28), transparent 30%),
+    radial-gradient(circle at 50% 45%, rgba(9, 33, 15, 0.86), transparent 34%),
+    linear-gradient(180deg, #02070a 0%, #03110d 52%, #000 100%);
+}
+
+.omx-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 42%, rgba(0, 0, 0, 0.78) 100%);
+}
+
+.omx-scan-columns {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.omx-column {
+  position: absolute;
+  top: -12%;
+  width: 2px;
+  height: 124%;
+  background: linear-gradient(180deg, transparent, rgba(57, 255, 20, 0.34), transparent);
+  filter: blur(0.45px);
+  animation: omxColumnPulse 6.2s ease-in-out infinite;
+}
+
+.omx-column.c1 { left: 7%; animation-delay: 0.2s; }
+.omx-column.c2 { left: 24%; animation-delay: 1.1s; }
+.omx-column.c3 { left: 49%; animation-delay: 0.6s; }
+.omx-column.c4 { left: 69%; animation-delay: 1.7s; }
+.omx-column.c5 { left: 88%; animation-delay: 0.9s; }
+
+.omx-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.omx-star {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(242, 255, 246, 0.86);
+  box-shadow: 0 0 7px rgba(198, 255, 206, 0.6);
+  animation: omxTwinkle 3.8s ease-in-out infinite;
+}
+
+.omx-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.omx-particle {
+  position: absolute;
+  bottom: -8%;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(75, 255, 104, 0.64);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.54);
+  animation-name: omxParticleFloat;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.omx-left-bars {
+  position: absolute;
+  left: 4.6%;
+  top: 33.8%;
+  display: flex;
+  gap: 9px;
+  opacity: 0.62;
+}
+
+.omx-left-bars span {
+  width: 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 188, 90, 0.95), rgba(255, 100, 20, 0.28));
+  box-shadow: 0 0 18px rgba(255, 165, 55, 0.52);
+}
+
+.omx-left-bars span:nth-child(1),
+.omx-left-bars span:nth-child(3) {
+  height: 52px;
+}
+
+.omx-left-bars span:nth-child(2) {
+  height: 62px;
+}
+
+.omx-right-panels {
+  position: absolute;
+  right: 7.8%;
+  top: 21.2%;
+  display: grid;
+  gap: 16px;
+}
+
+.omx-right-panels span {
+  width: 68px;
+  height: 68px;
+  border: 1px solid rgba(205, 255, 215, 0.16);
+  background: linear-gradient(180deg, rgba(220, 255, 225, 0.06), rgba(90, 120, 100, 0.02));
+}
+
+.omx-radar {
+  position: absolute;
+  right: -112px;
+  bottom: -150px;
+  width: 530px;
+  height: 530px;
+  pointer-events: none;
+}
+
+.omx-radar-outline {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(195, 255, 204, 0.2);
+  background: radial-gradient(circle at center, rgba(57, 255, 20, 0.22), rgba(57, 255, 20, 0.02) 48%, transparent 70%);
+}
+
+.omx-radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, rgba(57, 255, 20, 0.72), rgba(57, 255, 20, 0.16) 12%, transparent 45%);
+  mask: radial-gradient(circle, transparent 42%, #000 45%, #000 75%, transparent 78%);
+  -webkit-mask: radial-gradient(circle, transparent 42%, #000 45%, #000 75%, transparent 78%);
+  animation: omxRadarSweep 8s linear infinite;
+  filter: blur(0.6px);
+}
+
+.omx-button {
+  position: relative;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.omx-dial {
+  position: absolute;
+  inset: 0;
+}
+
+.omx-core-bloom {
+  position: absolute;
+  inset: 27%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(121, 255, 74, 0.4), rgba(57, 255, 20, 0.1) 55%, transparent 80%);
+  filter: blur(18px);
+}
+
+.omx-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.omx-outer-ccw {
+  transform-origin: 300px 300px;
+  animation: omxRotateCCW 26s linear infinite;
+}
+
+.omx-detail-ccw {
+  transform-origin: 300px 300px;
+  animation: omxRotateCCW 18s linear infinite;
+}
+
+.omx-green-cw {
+  transform-origin: 300px 300px;
+  animation: omxRotateCW 7.5s linear infinite;
+}
+
+.omx-green-inner-cw {
+  transform-origin: 300px 300px;
+  animation: omxRotateCW 5.8s linear infinite;
+}
+
+.omx-core-pulse {
+  transform-origin: 300px 300px;
+  animation: omxCoreBreathe 2.5s ease-in-out infinite;
+}
+
+.omx-nodes {
+  transform-origin: 300px 300px;
+  animation: omxNodeFloat 4.2s ease-in-out infinite;
+}
+
+.omx-blink-green {
+  animation: omxBlinkGreen 1.4s linear infinite;
+}
+
+.omx-blink-red {
+  animation: omxBlinkRed 1.9s linear infinite;
+}
+
+.omx-button.boost .omx-green-cw {
+  animation-duration: 2.5s;
+}
+
+.omx-button.boost .omx-green-inner-cw {
+  animation-duration: 2s;
+}
+
+.omx-button.boost .omx-outer-ccw,
+.omx-button.boost .omx-detail-ccw {
+  animation-duration: 8s;
+}
+
+.omx-button.boost .omx-core-pulse {
+  animation-duration: 0.95s;
+}
+
+.omx-status-main {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(0.78rem, 1.45vw, 1.16rem);
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: #94ff6f;
+  text-shadow: 0 0 18px rgba(57, 255, 20, 0.7);
+  animation: omxFlicker 2.8s linear infinite;
+}
+
+.omx-status-sub {
+  font-size: clamp(0.62rem, 1.06vw, 0.92rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(238, 244, 238, 0.5);
+}
+
+@keyframes omxRotateCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes omxRotateCCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes omxCoreBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes omxNodeFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes omxBlinkGreen {
+  0%, 44%, 100% { opacity: 0.25; }
+  50%, 82% { opacity: 1; }
+}
+
+@keyframes omxBlinkRed {
+  0%, 65%, 100% { opacity: 0.2; }
+  71%, 80% { opacity: 1; }
+}
+
+@keyframes omxTwinkle {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes omxParticleFloat {
+  from { transform: translateY(0) translateX(0); opacity: 0; }
+  12% { opacity: 0.8; }
+  88% { opacity: 0.2; }
+  to { transform: translateY(-110vh) translateX(22px); opacity: 0; }
+}
+
+@keyframes omxColumnPulse {
+  0%, 100% { opacity: 0.16; }
+  50% { opacity: 0.48; }
+}
+
+@keyframes omxRadarSweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes omxFlicker {
+  0%, 100% { opacity: 0.95; }
+  8% { opacity: 0.7; }
+  12% { opacity: 0.92; }
+  35% { opacity: 0.76; }
+  42% { opacity: 1; }
+  74% { opacity: 0.84; }
+}
+
+@media (max-width: 768px) {
+  .omx-radar {
+    width: 360px;
+    height: 360px;
+    right: -80px;
+    bottom: -108px;
+  }
+
+  .omx-right-panels span {
+    width: 48px;
+    height: 48px;
+  }
+
+  .omx-status-main {
+    letter-spacing: 0.28em;
+  }
+
+  .omx-status-sub {
+    letter-spacing: 0.2em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .omx-column,
+  .omx-star,
+  .omx-particle,
+  .omx-radar-sweep,
+  .omx-outer-ccw,
+  .omx-detail-ccw,
+  .omx-green-cw,
+  .omx-green-inner-cw,
+  .omx-core-pulse,
+  .omx-nodes,
+  .omx-blink-green,
+  .omx-blink-red,
+  .omx-status-main {
+    animation: none !important;
+  }
 }

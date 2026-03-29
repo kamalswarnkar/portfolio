@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#051108"/>
+      <stop offset="100%" stop-color="#0c2311"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <rect x="80" y="80" width="1040" height="540" rx="24" fill="#07180d" stroke="#39ff14" stroke-opacity="0.4"/>
+  <text x="120" y="180" fill="#8aff72" font-size="48" font-family="Segoe UI, Arial">GATE 2026 (CS/IT)</text>
+  <text x="120" y="250" fill="#d4ffd0" font-size="40" font-family="Segoe UI, Arial">Score: 383</text>
+  <text x="120" y="310" fill="#d4ffd0" font-size="40" font-family="Segoe UI, Arial">AIR: 21411</text>
+  <text x="120" y="380" fill="#9be88f" font-size="32" font-family="Segoe UI, Arial">Official scorecard preview placeholder</text>
+</svg>

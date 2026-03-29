@@ -22,11 +22,12 @@ export const sectionIds = [
   "hero",
   "banner",
   "about",
-  "training",
   "education",
   "skills",
   "projects",
   "certificates",
+  "achievements",
+  "training",
   "contact",
 ] as const;
 
