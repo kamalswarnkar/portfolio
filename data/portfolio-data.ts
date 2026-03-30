@@ -1,6 +1,6 @@
 export const resumeFile = {
   label: "Download CV",
-  href: "/assets/Kamal_Swarnkar_CV.pdf",
+  href: "/assets/Kamal_ Swarnkar_CV.pdf",
 };
 
 export const resumePreview = {
